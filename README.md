@@ -1,3 +1,5 @@
+### Google Calendar
+https://calendar.google.com/calendar
 ### Planning
 https://docs.google.com/document/d/1-InGPKSWdSScHAVy1Oyk3DItv9hBOH1Lgwy5Pj5Ojp8/edit?usp=sharing
 ### Google drive modelling-B directory with meetings, plannings and peer reviews
