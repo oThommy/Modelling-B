@@ -1,2 +1,8 @@
-# Modelling-b
-Modelling-b
+# TODO
+- 
+
+# Planning
+- 
+
+# Resources
+- 
