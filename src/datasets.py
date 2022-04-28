@@ -10,6 +10,9 @@ class Node:
 class Graph:
     def __init__(self):
         self.nodes = list()
+        self.collection = 0
+        self.transfer = 0
+        self.distribution = 0
     
     def add_node(self,node):
         self.nodes.append(node)
@@ -49,6 +52,15 @@ def getcosts(file):
     c_info = f.read().split()
     for i in range(len(c_info)):
         g.nodes[i].cost = int(c_info[i])
+    f.close()
+    
+def getmultipliers(file):
+    f = open(file,'r')
+    c_info = f.read().split()
+    g.collection = int(c_info[0])
+    g.transfer = int(c_info[1])
+    g.distribution = int(c_info[2])
+    f.close()
     
 #manually insert the amount of nodes in a given graph
 number_of_nodes = 10
@@ -63,3 +75,4 @@ for i in range(number_of_nodes):
 getflows('smallflows.txt')
 getedges('smalledges.txt')
 getcosts('smallcosts.txt')
+getmultipliers('smallmultipliers.txt')
