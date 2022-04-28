@@ -1,7 +1,7 @@
 #node class with the necessary variables
 class Node:
     def __init__(self):
-        self.hub = False
+        self.isHub = False
         self.cost = 0
         self.edges = dict()
         self.flows = dict()
