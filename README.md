@@ -9,11 +9,18 @@ https://drive.google.com/drive/folders/1vBNFrfofDKTUi9H0g7Ep10lGsGGAuJqL?usp=sha
 ### Trello
 https://trello.com/b/cLFZ9x3D/modelleren-b
 
+# Python library installations
+## Using pip
+Open `cmd.exe` as administrator and run `pip install openpyxl`.
+
+## Using Anaconda
+Open `C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Anaconda3 (64-bit)\Anaconda Powershell Prompt (Anaconda3).lnk` as administrator and run `conda install openpyxl`.
+
 # TODO
 - 
 
 # Resources (bronnen)
-- 
+- https://pyvis.readthedocs.io/en/latest/documentation.html
 
 # Other
 - brightspace-locker is a container for all finalized files that are uploaded to the brightspace-locker
