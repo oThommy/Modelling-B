@@ -46,8 +46,40 @@ class ILP:
         self.N = set(range(1, len(self.f) + 1))
         
     # returns the value of the function that should be minimized
-    def get_z(self, H: Dict[NodeId, bool], y: Dict[NodeId, Dict[NodeId, Dict[NodeId, Dict[NodeId, bool]]]]) -> int:
-        pass # TODO: implement z function
+    def get_z(self, H: Dict[NodeId, bool], E: Dict[NodeId, Dict[NodeId, bool]]) -> int:
+        # TODO: add constraints and add E in calculation of z
+
+        z = 0
+        
+        # add fixed costs for establishing hubs
+        for i in self.N:
+            z += H[i] * self.f[i]
+
+        # add costs of type non-hub to hub
+        for i in self.N:
+            for j in self.N:
+                for k in self.N:
+                    z += (1 - H[i]) * H[j] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
+
+        # add costs of type hub to non-hub
+        for i in self.N:
+            for j in self.N:
+                for k in self.N:
+                    z += H[i] * (1 - H[j]) * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
+
+        # add costs of type hub to hub
+        for i in self.N:
+            for j in self.N:
+                z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
+
+        # add costs of type non-hub to non-hub
+        for i in self.N:
+            for j in self.N:
+                for k in self.N:
+                    for l in self.N:
+                        z += (1 - H[i]) * (1 - H[j]) * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
+
+        return z
 
     def __repr__(self) -> str:
         rep = f"""
