@@ -12,8 +12,8 @@
 <style type="text/css">
 
         #mynetwork {
-            width: 500px;
-            height: 500px;
+            width: 1920px;
+            height: 1080px;
             background-color: #222222;
             border: 1px solid lightgray;
             position: relative;
@@ -22,12 +22,6 @@
 
         
 
-        
-        #config {
-            float: left;
-            width: 400px;
-            height: 600px;
-        }
         
 
         
@@ -38,8 +32,6 @@
 <body>
 <div id = "mynetwork"></div>
 
-
-<div id = "config"></div>
 
 <script type="text/javascript">
 
@@ -58,51 +50,16 @@
         
 
         // parsing and collecting nodes and edges from the python
-        nodes = new vis.DataSet([{"font": {"color": "white"}, "id": 8, "label": 8, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 9, "label": 9, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 10, "label": 10, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 11, "label": 11, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 12, "label": 12, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 13, "label": 13, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 14, "label": 14, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 15, "label": 15, "shape": "dot", "size": 25}, {"font": {"color": "white"}, "id": 1, "label": 1, "shape": "dot", "size": 50}, {"font": {"color": "white"}, "id": 2, "label": 2, "shape": "dot", "size": 50}, {"font": {"color": "white"}, "id": 3, "label": 3, "shape": "dot", "size": 50}, {"font": {"color": "white"}, "id": 4, "label": 4, "shape": "dot", "size": 50}, {"font": {"color": "white"}, "id": 5, "label": 5, "shape": "dot", "size": 50}, {"font": {"color": "white"}, "id": 6, "label": 6, "shape": "dot", "size": 50}, {"font": {"color": "white"}, "id": 7, "label": 7, "shape": "dot", "size": 50}]);
-        edges = new vis.DataSet([{"from": 1, "to": 2, "value": 25}, {"from": 1, "to": 3, "value": 25}, {"from": 1, "to": 4, "value": 25}, {"from": 1, "to": 5, "value": 25}, {"from": 1, "to": 6, "value": 25}, {"from": 1, "to": 7, "value": 25}, {"from": 2, "to": 3, "value": 25}, {"from": 2, "to": 4, "value": 25}, {"from": 2, "to": 5, "value": 25}, {"from": 2, "to": 6, "value": 25}, {"from": 2, "to": 7, "value": 25}, {"from": 3, "to": 4, "value": 25}, {"from": 3, "to": 5, "value": 25}, {"from": 3, "to": 6, "value": 25}, {"from": 3, "to": 7, "value": 25}, {"from": 4, "to": 5, "value": 25}, {"from": 4, "to": 6, "value": 25}, {"from": 4, "to": 7, "value": 25}, {"from": 5, "to": 6, "value": 25}, {"from": 5, "to": 7, "value": 25}, {"from": 6, "to": 7, "value": 25}, {"from": 8, "to": 7, "value": 100}, {"from": 9, "to": 5, "value": 100}, {"from": 10, "to": 7, "value": 100}, {"from": 11, "to": 7, "value": 100}, {"from": 12, "to": 7, "value": 100}, {"from": 13, "to": 5, "value": 100}, {"from": 14, "to": 5, "value": 100}, {"from": 15, "to": 7, "value": 100}]);
+        nodes = new vis.DataSet([{"font": {"color": "white"}, "id": 8, "label": 8, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 9, "label": 9, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 10, "label": 10, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 11, "label": 11, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 12, "label": 12, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 13, "label": 13, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 14, "label": 14, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 15, "label": 15, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 1, "label": 1, "shape": "dot", "size": 37.5}, {"font": {"color": "white"}, "id": 2, "label": 2, "shape": "dot", "size": 37.5}, {"font": {"color": "white"}, "id": 3, "label": 3, "shape": "dot", "size": 37.5}, {"font": {"color": "white"}, "id": 4, "label": 4, "shape": "dot", "size": 37.5}, {"font": {"color": "white"}, "id": 5, "label": 5, "shape": "dot", "size": 48.0}, {"font": {"color": "white"}, "id": 6, "label": 6, "shape": "dot", "size": 37.5}, {"font": {"color": "white"}, "id": 7, "label": 7, "shape": "dot", "size": 55.0}]);
+        edges = new vis.DataSet([{"from": 1, "to": 2, "width": 11.114285714285714}, {"from": 1, "to": 3, "width": 14.2}, {"from": 1, "to": 4, "width": 23.971428571428568}, {"from": 1, "to": 5, "width": 13.17142857142857}, {"from": 1, "to": 6, "width": 14.2}, {"from": 1, "to": 7, "width": 16.771428571428572}, {"from": 2, "to": 3, "width": 10.085714285714285}, {"from": 2, "to": 4, "width": 18.314285714285713}, {"from": 2, "to": 5, "width": 15.228571428571428}, {"from": 2, "to": 6, "width": 12.657142857142857}, {"from": 2, "to": 7, "width": 14.714285714285714}, {"from": 3, "to": 4, "width": 14.714285714285714}, {"from": 3, "to": 5, "width": 14.2}, {"from": 3, "to": 6, "width": 9.571428571428571}, {"from": 3, "to": 7, "width": 10.085714285714285}, {"from": 4, "to": 5, "width": 22.942857142857143}, {"from": 4, "to": 6, "width": 17.799999999999997}, {"from": 4, "to": 7, "width": 16.257142857142856}, {"from": 5, "to": 6, "width": 10.085714285714285}, {"from": 5, "to": 7, "width": 12.657142857142857}, {"from": 6, "to": 7, "width": 8.028571428571428}, {"from": 8, "to": 7, "width": 10.085714285714285}, {"from": 9, "to": 5, "width": 7.514285714285714}, {"from": 10, "to": 7, "width": 8.542857142857143}, {"from": 11, "to": 7, "width": 9.057142857142857}, {"from": 12, "to": 7, "width": 12.142857142857142}, {"from": 13, "to": 5, "width": 10.6}, {"from": 14, "to": 5, "width": 13.685714285714285}, {"from": 15, "to": 7, "width": 12.657142857142857}]);
 
         // adding nodes and edges to the graph
         data = {nodes: nodes, edges: edges};
 
-        var options = {
-    "configure": {
-        "enabled": true,
-        "filter": [
-            "physics"
-        ]
-    },
-    "edges": {
-        "color": {
-            "inherit": true
-        },
-        "smooth": {
-            "enabled": false,
-            "type": "continuous"
-        }
-    },
-    "interaction": {
-        "dragNodes": true,
-        "hideEdgesOnDrag": false,
-        "hideNodesOnDrag": false
-    },
-    "physics": {
-        "enabled": true,
-        "stabilization": {
-            "enabled": true,
-            "fit": true,
-            "iterations": 1000,
-            "onlyDynamicEdges": false,
-            "updateInterval": 50
-        }
-    }
-};
+        var options = {"nodes": {"borderWidthSelected": 3, "color": {"border": "rgba(43,124,233,1)", "background": "rgba(151,194,252,1)", "highlight": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}, "hover": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}}, "scaling": {"min": 20, "max": 55}, "font": {"size": 20}}, "edges": {"color": {"inherit": false, "color": "rgba(43,124,233,1)", "highlight": "rgba(114,166,229,1)", "hover": "rgba(114,166,229,1)"}, "hoverWidth": 1.5, "smooth": {"type": "discrete", "roundness": 0.6}, "scaling": {"min": 7, "max": 25}}, "physics": {"hierarchicalRepulsion": {"centralGravity": 0, "springLength": 150, "springConstant": 0.01, "damping": 0.09, "nodeDistance": 300}, "minVelocity": 0.75, "solver": "hierarchicalRepulsion"}};
         
         
 
-        
-        // if this network requires displaying the configure window,
-        // put it in its div
-        options.configure["container"] = document.getElementById("config");
         
 
         network = new vis.Network(container, data, options);

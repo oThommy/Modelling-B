@@ -9,7 +9,76 @@ import os
 NodeId = int
 
 GRAPHS_DIR= os.path.abspath(r'./graphs')
+MIN_NODE_SIZE = 20
+MAX_NODE_SIZE = 55
+MIN_EDGE_WIDTH = 7
+MAX_EDGE_WIDTH = 25
+# TODO: color for hub and color for non-hub
+GRAPH_OPTIONS = {
+    'nodes': {
+        'borderWidthSelected': 3,
+        'color': {
+            'border': 'rgba(43,124,233,1)',
+            'background': 'rgba(151,194,252,1)',
+            'highlight': {
+                'border': 'rgba(43,124,233,1)',
+                'background': 'rgba(210,229,255,1)'
+            },
+            'hover': {
+                'border': 'rgba(43,124,233,1)',
+                'background': 'rgba(210,229,255,1)'
+            }
+        },
+        'scaling': {
+            'min': MIN_NODE_SIZE,
+            'max': MAX_NODE_SIZE,
+        },
+        "font": {
+            "size": 20
+        }
+    },
+    'edges': {
+        'color': {
+            'inherit': False,
+            'color': 'rgba(43,124,233,1)',
+            'highlight': 'rgba(114,166,229,1)',
+            'hover': 'rgba(114,166,229,1)'
+        },
+        'hoverWidth': 1.5,
+        'smooth': False,
+        'scaling': {
+            'min': MIN_EDGE_WIDTH,
+            'max': MAX_EDGE_WIDTH
+        },
+        'smooth': {
+            'type': 'discrete',
+            'roundness': 0.6
+        },
+    },
+    'physics': {
+        'hierarchicalRepulsion': {
+            'centralGravity': 0,
+            'springLength': 150,
+            'springConstant': 0.01,
+            'damping': 0.09,
+            'nodeDistance': 300
+        },
+        'minVelocity': 0.75,
+        'solver': 'hierarchicalRepulsion'
+    },
+    # 'physics': {
+    #     'barnesHut': {
+    #         'centralGravity': 0,
+    #         'springLength': 300,
+    #         'springConstant': 0.01,
+    #         'damping': 0.09,
+    #     },
+    #     'minVelocity': 0.75,
+    #     'solver': 'barnesHut'
+    # }
+}
 
+# returns all possible edges between nodes
 def get_max_edges(nodes: Set[NodeId]) -> Tuple[NodeId, NodeId]:
     remaining_nodes = nodes.copy()
     for node in nodes:
@@ -17,9 +86,16 @@ def get_max_edges(nodes: Set[NodeId]) -> Tuple[NodeId, NodeId]:
         for neighbour_node in remaining_nodes:
             yield (node, neighbour_node)
 
-def get_max_edges_amount(nodes: Set[NodeId]) -> int:
-    n = len(nodes)
-    return n / 2 * (n - 1)
+# returns max degree when considering only hubs
+def get_max_hub_deg(nodes: Set[NodeId]) -> int:
+    return len(nodes) - 1
+
+# TODO: make non-linear line (also for get_scaled_edge_width) and maybe calculate min and max edge with from used edges
+def get_scaled_node_size(connections: int, max_connections: int, min_connections: int=1) -> float:
+    return (MAX_NODE_SIZE - MIN_NODE_SIZE) / (max_connections - min_connections) * (connections - min_connections) + MIN_NODE_SIZE
+
+def get_scaled_edge_width(cost: int, min_cost: int, max_cost: int) -> float:
+    return (MAX_EDGE_WIDTH - MIN_EDGE_WIDTH) / (max_cost - min_cost) * (cost - min_cost) + MIN_EDGE_WIDTH
 
 def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[NodeId, bool]], c: Dict[NodeId, Dict[NodeId, int]], filepath: str=None) -> None:
     hubs = {node for node, isHub in H.items() if isHub}
@@ -31,76 +107,46 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
     else:
         graph_path = os.path.join(GRAPHS_DIR, r'graph.html')
 
-    # g = Network(width='1920px', height='1080px')
-    g = Network(bgcolor='#222222', font_color='white')
+    # g = Network(bgcolor='#222222', font_color='white')
+    g = Network(width='1920px', height='1080px', bgcolor='#222222', font_color='white') # TODO: fix horz en vert scrollbar with css
     
-    non_hub_edges = {hub: 0 for hub in hubs}
+    max_hub_deg = get_max_hub_deg(hubs)
+    hub_connections = {hub: max_hub_deg for hub in hubs} # every hub has at least max_hub_deg edges, but may additionally have edges to non-hubs
     connected_hub = dict()
     for non_hub in non_hubs:
         # count amount of edges from hub to non_hub
         hub = max(E[non_hub], key=E[non_hub].get) # get hub with value equal to 1
-        non_hub_edges[hub] += 1
+        hub_connections[hub] += 1
 
         # store connected hub for every non_hub
         connected_hub[non_hub] = hub
 
-    # add nodes
-    g.add_nodes(list(non_hubs), size=[25 for _ in range(len(non_hubs))])
-    max_edges = get_max_edges_amount(hubs)
+    # add non-hubs nodes
+    g.add_nodes(list(non_hubs), size=[get_scaled_node_size(1, len(N)) for _ in range(len(non_hubs))])
+    
+    # add hub nodes
+    max_connections = max(hub_connections.values())
     for hub in hubs:
-        # g.add_node(hub, value=max_edges + non_hub_edges[hub])
-        g.add_node(hub, size=50) #FIXME:
+        g.add_node(hub, size=get_scaled_node_size(hub_connections[hub], max_connections))
+
+    c_arr = pd.DataFrame(c).to_numpy()
+    min_cost = np.min(c_arr[np.nonzero(c_arr)]) # ignore costs of 0
+    max_cost = c_arr.max()
 
     # add all edges between hubs
     for src, target in get_max_edges(hubs):
-        # g.add_edge(src, target, value=c[src][target])
-        g.add_edge(src, target, value=25)#FIXME:
+        g.add_edge(src, target, width=get_scaled_edge_width(c[src][target], min_cost, max_cost))
 
     # add all edges from non_hub to hub
     for src in non_hubs:
         target = connected_hub[src]
-        # g.add_edge(src, target, value=c[src][target])
-        g.add_edge(src, target, value=100) #FIXME:
+        g.add_edge(src, target, width=get_scaled_edge_width(c[src][target], min_cost, max_cost))
     
-    # g.set_options() # TODO: add gravity
-    # g.set_edge_smooth('cubicBezier')
-    
-    if False:
-        g.set_options("""
-        var options = {
-            "nodes": {
-                "borderWidthSelected": 3,
-                "color": {
-                    "border": "rgba(43,124,233,1)",
-                    "background": "rgba(151,194,252,1)",
-                    "highlight": {
-                        "border": "rgba(43,124,233,1)",
-                        "background": "rgba(210,229,210,1)"
-                    },
-                    "hover": {
-                        "border": "rgba(43,124,233,1)",
-                        "background": "rgba(210,229,210,1)"
-                    }
-                }
-            },
-            "edges": {
-                "color": {
-                    "inherit": true
-                },
-                "hoverWidth": 1.5,
-                "smooth": false
-            },
-            "physics": {
-                "barnesHut": {
-                    "springLength": 300
-                },
-                "minVelocity": 0.75
-            }
-        }
-        """)
+    if True:
+        g.set_options(json.dumps(GRAPH_OPTIONS))
     else:
-        g.show_buttons(filter_=['physics']) # TODO: note verbinding internet readme + parameter option for buttons
- 
+        # g.show_buttons(filter_=['edges', 'physics']) # TODO: note verbinding internet readme + parameter option for buttons
+        g.show_buttons() # TODO: note verbinding internet readme + parameter option for buttons
     g.show(graph_path)
 
 def main():
