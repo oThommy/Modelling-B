@@ -59,13 +59,13 @@ class ILP:
         for i in self.N:
             for j in self.N:
                 for k in self.N:
-                    z += (1 - H[i]) * H[j] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
+                    z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
 
         # add costs of type hub to non-hub
         for i in self.N:
             for j in self.N:
                 for k in self.N:
-                    z += H[i] * (1 - H[j]) * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
+                    z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
 
         # add costs of type hub to hub
         for i in self.N:
@@ -77,7 +77,7 @@ class ILP:
             for j in self.N:
                 for k in self.N:
                     for l in self.N:
-                        z += (1 - H[i]) * (1 - H[j]) * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
+                        z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
 
         return z
 

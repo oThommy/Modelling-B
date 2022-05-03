@@ -1,0 +1,17 @@
+{
+    "nodes": {
+        "borderWidthSelected": 3
+    },
+    "edges": {
+        "color": {
+        "inherit": true
+        },
+        "smooth": false
+    },
+    "physics": {
+        "barnesHut": {
+        "centralGravity": 0.1
+        },
+        "minVelocity": 0.75
+    }
+}

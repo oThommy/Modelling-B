@@ -2,10 +2,13 @@ from typing import Dict, List, Set, Tuple
 from pyvis.network import Network
 import pandas as pd
 import numpy as np
+import pathlib
 import json
 import os
 
 NodeId = int
+
+GRAPHS_DIR= os.path.abspath(r'./graphs')
 
 def get_max_edges(nodes: Set[NodeId]) -> Tuple[NodeId, NodeId]:
     remaining_nodes = nodes.copy()
@@ -18,9 +21,15 @@ def get_max_edges_amount(nodes: Set[NodeId]) -> int:
     n = len(nodes)
     return n / 2 * (n - 1)
 
-def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[NodeId, bool]], c: Dict[NodeId, Dict[NodeId, int]]) -> None:
+def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[NodeId, bool]], c: Dict[NodeId, Dict[NodeId, int]], filepath: str=None) -> None:
     hubs = {node for node, isHub in H.items() if isHub}
     non_hubs = N - hubs
+
+    if filepath is not None:
+        filename = pathlib.Path(filepath).stem
+        graph_path = os.path.join(GRAPHS_DIR, fr'graph_{filename}.html')
+    else:
+        graph_path = os.path.join(GRAPHS_DIR, r'graph.html')
 
     # g = Network(width='1920px', height='1080px')
     g = Network(bgcolor='#222222', font_color='white')
@@ -36,21 +45,22 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
         connected_hub[non_hub] = hub
 
     # add nodes
-    g.add_nodes(list(non_hubs), value=[1 for _ in range(len(non_hubs))])
+    g.add_nodes(list(non_hubs), size=[25 for _ in range(len(non_hubs))])
     max_edges = get_max_edges_amount(hubs)
     for hub in hubs:
         # g.add_node(hub, value=max_edges + non_hub_edges[hub])
-        g.add_node(hub, value=10) #FIXME:
+        g.add_node(hub, size=50) #FIXME:
 
     # add all edges between hubs
     for src, target in get_max_edges(hubs):
         # g.add_edge(src, target, value=c[src][target])
-        g.add_edge(src, target, value=100)#FIXME:
+        g.add_edge(src, target, value=25)#FIXME:
 
     # add all edges from non_hub to hub
     for src in non_hubs:
         target = connected_hub[src]
-        g.add_edge(src, target, value=c[src][target])
+        # g.add_edge(src, target, value=c[src][target])
+        g.add_edge(src, target, value=100) #FIXME:
     
     # g.set_options() # TODO: add gravity
     # g.set_edge_smooth('cubicBezier')
@@ -82,16 +92,16 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
             },
             "physics": {
                 "barnesHut": {
-                "centralGravity": 0.1
+                    "springLength": 300
                 },
                 "minVelocity": 0.75
             }
         }
         """)
     else:
-        g.show_buttons(filter_=['edges', 'physics']) # TODO: note verbinding internet readme + parameter option for buttons
+        g.show_buttons(filter_=['physics']) # TODO: note verbinding internet readme + parameter option for buttons
  
-    g.show('example.html') # TODO: change name with os
+    g.show(graph_path)
 
 def main():
     print('Visualised graph demo.')
@@ -444,7 +454,8 @@ def main():
                 14: 4,
                 15: 0
             }
-        }
+        },
+        r'demo'
     )
 
 if __name__ == '__main__':
