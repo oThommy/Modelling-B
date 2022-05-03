@@ -23,7 +23,7 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
     non_hubs = N - hubs
 
     # g = Network(width='1920px', height='1080px')
-    g = Network()
+    g = Network(bgcolor='#222222', font_color='white')
     
     non_hub_edges = {hub: 0 for hub in hubs}
     connected_hub = dict()
@@ -36,23 +36,61 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
         connected_hub[non_hub] = hub
 
     # add nodes
-    g.add_nodes(list(non_hubs), size=[1 for _ in range(len(non_hubs))])
+    g.add_nodes(list(non_hubs), value=[1 for _ in range(len(non_hubs))])
     max_edges = get_max_edges_amount(hubs)
     for hub in hubs:
-        g.add_node(hub, value=max_edges + non_hub_edges[hub])
+        # g.add_node(hub, value=max_edges + non_hub_edges[hub])
+        g.add_node(hub, value=10) #FIXME:
 
     # add all edges between hubs
     for src, target in get_max_edges(hubs):
-        g.add_edge(src, target, value=c[src][target])
+        # g.add_edge(src, target, value=c[src][target])
+        g.add_edge(src, target, value=100)#FIXME:
 
     # add all edges from non_hub to hub
     for src in non_hubs:
         target = connected_hub[src]
         g.add_edge(src, target, value=c[src][target])
     
-
-
-    g.show_buttons() # TODO: note verbinding internet readme
+    # g.set_options() # TODO: add gravity
+    # g.set_edge_smooth('cubicBezier')
+    
+    if False:
+        g.set_options("""
+        var options = {
+            "nodes": {
+                "borderWidthSelected": 3,
+                "color": {
+                    "border": "rgba(43,124,233,1)",
+                    "background": "rgba(151,194,252,1)",
+                    "highlight": {
+                        "border": "rgba(43,124,233,1)",
+                        "background": "rgba(210,229,210,1)"
+                    },
+                    "hover": {
+                        "border": "rgba(43,124,233,1)",
+                        "background": "rgba(210,229,210,1)"
+                    }
+                }
+            },
+            "edges": {
+                "color": {
+                    "inherit": true
+                },
+                "hoverWidth": 1.5,
+                "smooth": false
+            },
+            "physics": {
+                "barnesHut": {
+                "centralGravity": 0.1
+                },
+                "minVelocity": 0.75
+            }
+        }
+        """)
+    else:
+        g.show_buttons(filter_=['edges', 'physics']) # TODO: note verbinding internet readme + parameter option for buttons
+ 
     g.show('example.html') # TODO: change name with os
 
 def main():
