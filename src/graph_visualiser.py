@@ -108,7 +108,7 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
         graph_path = os.path.join(GRAPHS_DIR, r'graph.html')
 
     # g = Network(bgcolor='#222222', font_color='white')
-    g = Network(width='1920px', height='1080px', bgcolor='#222222', font_color='white') # TODO: fix horz en vert scrollbar with css
+    g = Network(width='100%', height='100%', bgcolor='#222222', font_color='white')
     
     max_hub_deg = get_max_hub_deg(hubs)
     hub_connections = {hub: max_hub_deg for hub in hubs} # every hub has at least max_hub_deg edges, but may additionally have edges to non-hubs
@@ -145,8 +145,7 @@ def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[
     if True:
         g.set_options(json.dumps(GRAPH_OPTIONS))
     else:
-        # g.show_buttons(filter_=['edges', 'physics']) # TODO: note verbinding internet readme + parameter option for buttons
-        g.show_buttons() # TODO: note verbinding internet readme + parameter option for buttons
+        g.show_buttons(filter_=['edges', 'physics'])
     g.show(graph_path)
 
 def main():
