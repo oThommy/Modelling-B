@@ -55,27 +55,27 @@ GRAPH_OPTIONS = {
             'roundness': 0.6
         },
     },
-    'physics': {
-        'hierarchicalRepulsion': {
-            'centralGravity': 0,
-            'springLength': 150,
-            'springConstant': 0.01,
-            'damping': 0.09,
-            'nodeDistance': 300
-        },
-        'minVelocity': 0.75,
-        'solver': 'hierarchicalRepulsion'
-    },
     # 'physics': {
-    #     'barnesHut': {
+    #     'hierarchicalRepulsion': {
     #         'centralGravity': 0,
-    #         'springLength': 300,
+    #         'springLength': 150,
     #         'springConstant': 0.01,
     #         'damping': 0.09,
+    #         'nodeDistance': 300
     #     },
     #     'minVelocity': 0.75,
-    #     'solver': 'barnesHut'
-    # }
+    #     'solver': 'hierarchicalRepulsion'
+    # },
+    'physics': {
+        'barnesHut': {
+            'centralGravity': 0,
+            'springLength': 300,
+            'springConstant': 0.01,
+            'damping': 0.09,
+        },
+        'minVelocity': 0.75,
+        'solver': 'barnesHut'
+    }
 }
 
 # returns all possible edges between nodes

@@ -35,11 +35,11 @@ class ILP:
 
         w_df = pd.read_excel(filepath, sheet_name='w', index_col=0)
         w_df = df_drop_unnamed_cols(w_df)
-        self.w = w_df.to_dict()
+        self.w = w_df.T.to_dict() # transposed since we defined the vertical nodes are the origin and the horizontal nodes the destination
 
         c_df = pd.read_excel(filepath, sheet_name='c', index_col=0)
         c_df = df_drop_unnamed_cols(c_df)
-        self.c = c_df.to_dict()
+        self.c = c_df.T.to_dict()
 
         f_df = pd.read_excel(filepath, sheet_name='f', index_col=0, header=None)
         self.f = f_df.iloc[:, 0].to_dict()
@@ -50,7 +50,17 @@ class ILP:
         # TODO: add constraints and add E in calculation of z
 
         z = 0
-        
+        for i in self.N:
+            z += H[i] * self.f[i]
+            for j in self.N:
+                z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
+                for k in self.N:
+                    z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
+                    z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
+                    for l in self.N:
+                        z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
+        return z
+
         # add fixed costs for establishing hubs
         for i in self.N:
             z += H[i] * self.f[i]
