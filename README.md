@@ -1,3 +1,6 @@
+![python-version](https://img.shields.io/badge/python-v3.10-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+
 ### Overleaf
 https://www.overleaf.com/7557863444ptzfkkrvdqjk
 ### Google Calendar
