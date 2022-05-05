@@ -9,14 +9,17 @@ https://drive.google.com/drive/folders/1vBNFrfofDKTUi9H0g7Ep10lGsGGAuJqL?usp=sha
 ### Trello
 https://trello.com/b/cLFZ9x3D/modelleren-b
 
-# Python library installations
-## Using pip
-Open `cmd.exe` as administrator and run `pip install openpyxl tqdm pyvis`.
+# Python environement setup
+Please ensure you have Python version 3.10 installed.
 
-## Using Anaconda
-Open `C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Anaconda3 (64-bit)\Anaconda Powershell Prompt (Anaconda3).lnk` as administrator and run `conda install openpyxl tqdm` and run `pip install pyvis`.
+## Using a normal Python installation
+- Using cmd: open `cmd.exe` in the root of `Modelling-B` as administrator and run `python -m venv venv && venv/Scripts/activate.bat && pip install -r requirements.txt`.
+- Using Git Bash: open Git Bash in the root of `Modelling-B` as administrator and run `python -m venv venv && source venv/Scripts/activate && pip install -r requirements.txt`.
 
-Note that an internet connection is required in order to use pyvis. 
+## Using an Anaconda installation
+- Open `cmd.exe` in the root of `Modelling-B` as administrator and run `conda create -y --name venv python=3.10 && conda install -y --name venv -c conda-forge --file requirements.txt && conda activate venv`.
+
+Note that an internet connection is required in order to use pyvis.
 
 # TODO
 - 

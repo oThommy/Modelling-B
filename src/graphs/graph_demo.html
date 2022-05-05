@@ -56,7 +56,7 @@
         // adding nodes and edges to the graph
         data = {nodes: nodes, edges: edges};
 
-        var options = {"nodes": {"borderWidthSelected": 3, "color": {"border": "rgba(43,124,233,1)", "background": "rgba(151,194,252,1)", "highlight": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}, "hover": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}}, "scaling": {"min": 20, "max": 55}, "font": {"size": 20}}, "edges": {"color": {"inherit": false, "color": "rgba(43,124,233,1)", "highlight": "rgba(114,166,229,1)", "hover": "rgba(114,166,229,1)"}, "hoverWidth": 1.5, "smooth": {"type": "discrete", "roundness": 0.6}, "scaling": {"min": 7, "max": 25}}, "physics": {"barnesHut": {"centralGravity": 0, "springLength": 300, "springConstant": 0.01, "damping": 0.09}, "minVelocity": 0.75, "solver": "barnesHut"}};
+        var options = {"nodes": {"borderWidthSelected": 3, "color": {"border": "rgba(43,124,233,1)", "background": "rgba(151,194,252,1)", "highlight": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}, "hover": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}}, "scaling": {"min": 20, "max": 55}, "font": {"size": 20}}, "edges": {"color": {"inherit": false, "color": "rgba(43,124,233,1)", "highlight": "rgba(114,166,229,1)", "hover": "rgba(114,166,229,1)"}, "hoverWidth": 1.5, "smooth": {"type": "discrete", "roundness": 0.6}, "scaling": {"min": 7, "max": 25}}, "physics": {"hierarchicalRepulsion": {"centralGravity": 0, "springLength": 150, "springConstant": 0.01, "damping": 0.09, "nodeDistance": 300}, "minVelocity": 0.75, "solver": "hierarchicalRepulsion"}};
         
         
 
