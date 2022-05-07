@@ -1,0 +1,17 @@
+name: modelling-b-venv
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pyvis
+  - networkx
+  - tqdm
+  - PuLP
+  - pandas
+  - pandera
+  - numpy
+  - openpyxl
+  - jupyter
+  - matplotlib
+  - matplotlib-inline
