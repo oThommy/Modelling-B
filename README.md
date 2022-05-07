@@ -13,7 +13,7 @@ https://drive.google.com/drive/folders/1vBNFrfofDKTUi9H0g7Ep10lGsGGAuJqL?usp=sha
 https://trello.com/b/cLFZ9x3D/modelleren-b
 
 # Python environement setup
-Please ensure you have Python version 3.10 installed.
+Please ensure you have Python version 3.10 installed. Note that an internet connection is required in order to use pyvis.
 
 ## Using a normal Python installation
 ### Using cmd
@@ -26,13 +26,19 @@ Please ensure you have Python version 3.10 installed.
 - To activate virtual environment use `source venv/Scripts/activate`.
 - To deactivate virtual environment use `deactivate`.
 
+### Selecting Python interpreter in Visual Studio Code
+- To select a the virtual environment, use the **Python: Select Interpreter** command from the **Command Palette** (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) and enter `.\venv\Scripts\python.exe`.
+
 ## Using an Anaconda installation
 Replace `C:/ProgramData/Anaconda3/` with `your/path/to/Anaconda3` in the code below in case they do not match.
 - Open `cmd.exe` in the root of `Modelling-B` as administrator and run `"C:/ProgramData/Anaconda3/condabin/activate.bat" && conda env create -f environment.yml && conda activate modelling-b-venv`.
 - To activate virtual environment use `conda activate modelling-b-venv`.
-- To deactivate virtual environment use `deactivate`.
+- To deactivate virtual environment use `conda deactivate`.
 
-Note that an internet connection is required in order to use pyvis.
+### Selecting Python interpreter in Anaconda
+The interpreter is located at `C:\ProgramData\Anaconda3\envs\modelling-b-venv\python.exe`.
+- To use Spyder, either activate the virtual environment and run `conda install spyder` and run `spyder` or activate the virtual environment from the Spyder console.
+- To use Jupyter Notebook, activate the virutal environment and run `jupyter notebook`. Once you have selected a file you can select the virtual environment from **Kenerl** > **Change kernel** > **Python 3 (ipykernel)**.
 
 # TODO
 - 
