@@ -38,7 +38,7 @@ Replace `C:/ProgramData/Anaconda3/` with `your/path/to/Anaconda3` in the code be
 ### Selecting Python interpreter in Anaconda
 The interpreter is located at `C:\ProgramData\Anaconda3\envs\modelling-b-venv\python.exe`.
 - To use Spyder, either activate the virtual environment and run `conda install spyder` and run `spyder` or activate the virtual environment from the Spyder console.
-- To use Jupyter Notebook, activate the virutal environment and run `jupyter notebook`. Once you have selected a file you can select the virtual environment from **Kenerl** > **Change kernel** > **Python 3 (ipykernel)**.
+- To use Jupyter Notebook, activate the virutal environment and run `jupyter notebook`. Once you have selected a file you can select the virtual environment from **Kernel** > **Change kernel** > **Python 3 (ipykernel)**.
 
 # TODO
 - 

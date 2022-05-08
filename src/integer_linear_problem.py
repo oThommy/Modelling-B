@@ -1,52 +1,107 @@
-from typing import Dict, List, Set
+from custom_typing import NodeId, Series, DataFrame
+from typing import Optional, TypeAlias, TypeVar
+from typing_extensions import Self
 import pandas as pd
 import numpy as np
 import json
 import os
 
-NodeId = int
-
-# removes all columns that start with 'Unnamed:'
-def df_drop_unnamed_cols(df: pd.DataFrame):
-    return df[df.columns.drop(list(df.filter(regex=r'^Unnamed:')))]
 
 class ILP:
-    filepath: str
-    N: Set[NodeId]
-    collection: int
-    transfer: int
-    distribution: int
-    w: Dict[NodeId, Dict[NodeId, int]]
-    c: Dict[NodeId, Dict[NodeId, int]]
-    f: Dict[NodeId, int]
+    __slots__ = '__N', '__collection', '__transfer', '__distribution', '__w', '__c', '__f', '__filepath'
 
-    def __init__(self, filepath: str):
-        self.filepath = os.path.abspath(filepath)
+    def __init__(
+        self,
+        N: set[NodeId],
+        collection: int,
+        transfer: int,
+        distribution: int,
+        w: DataFrame[NodeId, Series[NodeId, int]] | dict[NodeId, dict[NodeId, int]],
+        c: DataFrame[NodeId, Series[NodeId, int]] | dict[NodeId, dict[NodeId, int]],
+        f: Series[NodeId, int] | dict[NodeId, int],
+        filepath: Optional[str] = None
+    ) -> None:
 
-        # read excel file into dataframes
-        gen_info_df = pd.read_excel(self.filepath, sheet_name='General information', usecols='A:B', index_col=0, header=None)
+        self.__N = N
+        self.__collection = collection
+        self.__transfer = transfer
+        self.__distribution = distribution
+
+        self.__w = w
+        self.__c = c
+        self.__f = f
+
+        self.__filepath = os.path.abspath(filepath) if filepath is not None else None
+
+    @classmethod
+    def from_excel(cls, filepath: str) -> Self:
+        '''Load ILP dataset from excel'''
+
+        filepath = os.path.abspath(filepath)
+
+        gen_info_ser = pd.read_excel(filepath, sheet_name='General information', header=None, index_col=0).squeeze('columns')
         # due to a mistake in the excel dataset, the collection may contain an extra space
         try:
-            self.collection = gen_info_df.loc['collection '].iloc[0]
+            collection = gen_info_ser['collection ']
         except:
-            self.collection = gen_info_df.loc['collection'].iloc[0]
-        self.transfer = gen_info_df.loc['transfer'].iloc[0]
-        self.distribution = gen_info_df.loc['distribution'].iloc[0]
+            collection = gen_info_ser['collection']
+        transfer = gen_info_ser['transfer']
+        distribution = gen_info_ser['distribution']
 
         w_df = pd.read_excel(filepath, sheet_name='w', index_col=0)
-        w_df = df_drop_unnamed_cols(w_df)
-        self.w = w_df.T.to_dict() # transposed since we defined the vertical nodes are the origin and the horizontal nodes the destination
+        w_df = ILP.df_drop_unnamed_cols(w_df)
 
         c_df = pd.read_excel(filepath, sheet_name='c', index_col=0)
-        c_df = df_drop_unnamed_cols(c_df)
-        self.c = c_df.T.to_dict()
+        c_df = ILP.df_drop_unnamed_cols(c_df)
 
-        f_df = pd.read_excel(filepath, sheet_name='f', index_col=0, header=None)
-        self.f = f_df.iloc[:, 0].to_dict()
-        self.N = set(range(1, len(self.f) + 1))
-        
-    # returns the value of the function that should be minimized
-    def get_z(self, H: Dict[NodeId, bool], E: Dict[NodeId, Dict[NodeId, bool]]) -> int:
+        f_ser = pd.read_excel(filepath, sheet_name='f', index_col=0, header=None).squeeze('columns')
+        N = set(f_ser.index)
+
+        return cls(N, collection, transfer, distribution, w_df, c_df, f_ser, filepath)
+
+    @staticmethod
+    def df_drop_unnamed_cols(df: pd.DataFrame):
+        """removes all columns that start with 'Unnamed:'"""
+        return df[df.columns.drop(list(df.filter(regex=r'^Unnamed:')))]
+
+    @property
+    def N(self) -> set[NodeId]:
+        return self.__N
+
+    @property
+    def collection(self) -> int:
+        return self.__collection
+    
+    @property
+    def transfer(self) -> int:
+        return self.__transfer
+    
+    @property
+    def distribution(self) -> int:
+        return self.__distribution
+    
+    @property
+    def w(self) -> DataFrame[NodeId, Series[NodeId, int]]:
+        return self.__w
+    
+    @property
+    def c(self) -> DataFrame[NodeId, Series[NodeId, int]]:
+        return self.__c
+    
+    @property
+    def f(self) -> Series[NodeId, int]:
+        return self.__f
+    
+    @property
+    def filepath(self) -> Optional[str]:
+        return self.__filepath
+    
+    
+    
+    
+
+    def get_z(self, H: dict[NodeId, bool], E: dict[NodeId, dict[NodeId, bool]]) -> int:
+        '''returns the value of the function that should be minimized'''
         # TODO: add constraints and add E in calculation of z
 
         z = 0

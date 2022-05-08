@@ -1,0 +1,14 @@
+- global config
+- refactor ILP
+    - convert incoming dict arguments to Series or DataFrame
+        - overloaded static method with single or multiple (*args) argument
+    - implement faster get_z
+    - implement even faster get_z for a single hub
+- refactor graph_visualiser
+- make log class (or define on ILP?)
+    - retreive data
+- refactor repo
+    - delete bs-locker, latex-overleaf, etc.
+- add performance packages to requirements.txt and environment.yml
+- implement second intuitive algorithm
+- remove pandera?

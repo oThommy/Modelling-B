@@ -1,5 +1,6 @@
 # Custom
-# Nothing here yet...
+# don't share settings (such as linting) yet and just configure settings on a user level
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

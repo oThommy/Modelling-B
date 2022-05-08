@@ -1,4 +1,4 @@
-from typing import Dict, List, Set, Tuple
+from typing import Optional
 from pyvis.network import Network
 import pandas as pd
 import numpy as np
@@ -79,7 +79,7 @@ GRAPH_OPTIONS = {
 }
 
 # returns all possible edges between nodes
-def get_max_edges(nodes: Set[NodeId]) -> Tuple[NodeId, NodeId]:
+def get_max_edges(nodes: set[NodeId]) -> tuple[NodeId, NodeId]:
     remaining_nodes = nodes.copy()
     for node in nodes:
         remaining_nodes.remove(node)
@@ -87,7 +87,7 @@ def get_max_edges(nodes: Set[NodeId]) -> Tuple[NodeId, NodeId]:
             yield (node, neighbour_node)
 
 # returns max degree when considering only hubs
-def get_max_hub_deg(nodes: Set[NodeId]) -> int:
+def get_max_hub_deg(nodes: set[NodeId]) -> int:
     return len(nodes) - 1
 
 # TODO: make non-linear line (also for get_scaled_edge_width) and maybe calculate min and max edge with from used edges
@@ -97,7 +97,7 @@ def get_scaled_node_size(connections: int, max_connections: int, min_connections
 def get_scaled_edge_width(cost: int, min_cost: int, max_cost: int) -> float:
     return (MAX_EDGE_WIDTH - MIN_EDGE_WIDTH) / (max_cost - min_cost) * (cost - min_cost) + MIN_EDGE_WIDTH
 
-def visualise_graph(N: Set[NodeId], H: Dict[NodeId, bool], E: Dict[NodeId, Dict[NodeId, bool]], c: Dict[NodeId, Dict[NodeId, int]], filepath: str=None) -> None:
+def visualise_graph(N: set[NodeId], H: dict[NodeId, bool], E: dict[NodeId, dict[NodeId, bool]], c: dict[NodeId, dict[NodeId, int]], filepath: Optional[str]=None) -> None:
     hubs = {node for node, isHub in H.items() if isHub}
     non_hubs = N - hubs
 
