@@ -1,5 +1,5 @@
-from typing import Optional
 from pyvis.network import Network
+from typing import Optional
 import pandas as pd
 import numpy as np
 import pathlib

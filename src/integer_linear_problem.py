@@ -7,7 +7,7 @@ import json
 import os
 
 
-class ILP:
+class Ilp:
     __slots__ = '__N', '__collection', '__transfer', '__distribution', '__w', '__c', '__f', '__filepath'
 
     def __init__(
@@ -43,7 +43,7 @@ class ILP:
 
     @classmethod
     def from_excel(cls, filepath: str) -> Self:
-        '''Load ILP dataset from excel'''
+        '''Load Ilp dataset from excel'''
 
         filepath = os.path.abspath(filepath)
 
@@ -56,11 +56,12 @@ class ILP:
         transfer = gen_info_ser['transfer']
         distribution = gen_info_ser['distribution']
 
-        w_df = pd.read_excel(filepath, sheet_name='w', index_col=0)
-        w_df = ILP.df_drop_unnamed_cols(w_df)
+        # take transpose since vertical column is the origin and horizontal row the destination
+        w_df = pd.read_excel(filepath, sheet_name='w', index_col=0).T
+        w_df = Ilp.df_drop_unnamed_cols(w_df)
 
-        c_df = pd.read_excel(filepath, sheet_name='c', index_col=0)
-        c_df = ILP.df_drop_unnamed_cols(c_df)
+        c_df = pd.read_excel(filepath, sheet_name='c', index_col=0).T
+        c_df = Ilp.df_drop_unnamed_cols(c_df)
 
         f_ser = pd.read_excel(filepath, sheet_name='f', index_col=0, header=None).squeeze('columns')
         N = set(f_ser.index)
@@ -104,34 +105,69 @@ class ILP:
     def filepath(self) -> Optional[str]:
         return self.__filepath
     
-    def get_z(self, H: Series[NodeId, bool], E: DataFrame[NodeId, Series[NodeId, bool]]) -> int:
+    def get_z(
+        self, 
+        hubs: set[NodeId], 
+        non_hubs: set[NodeId], 
+        E: Optional[DataFrame[NodeId, Series[NodeId, bool]]] = None
+    ) -> int:
+
         '''returns the value of the function that should be minimized'''
+
+        if len(hubs) == 1:
+            return self._get_z_single_hub(next(iter(hubs)), non_hubs)
+        else:
+            return self._get_z_multiple_hubs(hubs, non_hubs, E)
+
+    # @overload
+    # def get_z(self, H: Series[NodeId, bool], E: DataFrame[NodeId, Series[NodeId, bool]]) -> int:
+    #     FIXME: ADD COMMENT
+
+    #     z = 0
+
+    #     for i in self.N:
+    #         # add fixed costs for establishing hubs
+    #         z += H[i] * self.f[i]
+
+    #         for j in self.N:
+    #             # add costs of type hub to hub
+    #             z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
+                
+    #             for k in self.N:
+    #                 # add costs of type non-hub to hub
+    #                 z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
+                    
+    #                 # add costs of type hub to non-hub
+    #                 z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
+                    
+    #                 for l in self.N:
+    #                     # add costs of type non-hub to non-hub
+    #                     z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
+
+    #     return z
+
+    def _get_z_single_hub(self, hub: NodeId, non_hubs: set[NodeId]) -> int:
         z = 0
 
-        for i in self.N:
-            # add fixed costs for establishing hubs
-            z += H[i] * self.f[i]
+        # add fixed costs for establishing hub
+        z += self.f[hub]
 
-            for j in self.N:
-                # add costs of type hub to hub
-                z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
-                
-                for k in self.N:
-                    # add costs of type non-hub to hub
-                    z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
-                    
-                    # add costs of type hub to non-hub
-                    z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
-                    
-                    for l in self.N:
-                        # add costs of type non-hub to non-hub
-                        z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
+        for non_hub_dest in non_hubs:
+            # add costs of type hub to non-hub
+            z += self.w[hub][non_hub_dest] * self.distribution * self.c[hub][non_hub_dest]
 
+            for non_hub_src in non_hubs:
+                # add costs of type non-hub to non-hub
+                z += self.w[non_hub_src][non_hub_dest] * (self.collection * self.c[non_hub_src][hub] + self.distribution * self.c[hub][non_hub_dest])
+        
         return z
+
+    def _get_z_multiple_hubs() -> int:
+        pass
 
     def __repr__(self) -> str:
         rep = f"""
-ILP(
+Ilp(
     filepath: {self.filepath}
     N: {self.N}
     collection: {self.collection}

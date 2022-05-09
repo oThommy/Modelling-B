@@ -5,3 +5,4 @@ import os
 @dataclass(frozen=True, slots=True)
 class Config:
     GRAPHS_DIR_PATH: str = os.path.relpath(r'./graphs')
+    TQDM_NCOLS: int = 100

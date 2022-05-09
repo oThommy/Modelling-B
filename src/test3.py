@@ -55,11 +55,24 @@
 # print(x)
 # print(type(x))
 
-from integer_linear_problem import ILP
+# from integer_linear_problem import ILP
 
-ilp = ILP.from_excel(r'./../brightspace-locker/Data assignment parcel transport 2 Small.xlsx')
-print(type(ilp.w.index))
+# ilp = ILP.from_excel(r'./../brightspace-locker/Data assignment parcel transport 2 Small.xlsx')
+# print(type(ilp.w.index))
 
     # @staticmethod
     # def dict_to_pandas(*dicts: dict) -> tuple[Series | DataFrame]:
     #     pass
+
+class Test:
+    __test: str = 'hoi'
+
+    @property 
+    def test(self) -> str:
+        return self.__test
+
+    def yeet(self):
+        return self.test
+
+lol = Test()
+print(lol.yeet())

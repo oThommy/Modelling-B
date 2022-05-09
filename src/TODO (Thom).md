@@ -3,6 +3,9 @@
     - implement faster get_z
     - implement even faster get_z for a single hub
     - are constraints needed in get_z?
+    - get_z_from_dict()?
+    - test ILP extensively
+    - remove @property?
 - refactor graph_visualiser
 - make log class (or define on ILP?)
     - retreive data
@@ -11,3 +14,4 @@
 - add performance packages to requirements.txt and environment.yml
 - implement second intuitive algorithm
 - remove pandera?
+- uitzoeken hoe je andere solvers kunt toevoegen aan requirements.txt en environment.yml
