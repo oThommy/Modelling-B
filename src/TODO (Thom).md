@@ -1,9 +1,8 @@
 - global config
 - refactor ILP
-    - convert incoming dict arguments to Series or DataFrame
-        - overloaded static method with single or multiple (*args) argument
     - implement faster get_z
     - implement even faster get_z for a single hub
+    - are constraints needed in get_z?
 - refactor graph_visualiser
 - make log class (or define on ILP?)
     - retreive data

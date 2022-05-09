@@ -1,116 +1,65 @@
-# from dataclasses import dataclass
-# from pprint import pprint
-# from typing import Generic, TypeAlias, TypeVar
+
+# from typing import overload
+# from multipledispatch import dispatch
 # import pandas as pd
-# NodeId: TypeAlias = int
-# Person = TypeVar('Person')
+# from custom_typing import NodeId, Series, DataFrame
 
-# class Person:
-#     __name: str
-#     __age: int
+# @dispatch(dict[int, int])
+# def to_pandas(*args: dict[NodeId, int]) -> Series[NodeId, int]:
+#     print('series')
+#     return pd.Series()
 
-#     def __init__(self: Person, filepath: str) -> None:
-#         self.__name = 'YEET'
-#         self.__age = 20
-    
-#     @property
-#     def name(self) -> str:
-#         return self.__name
-
-#     @property
-#     def name(self) -> str:
-#         return self.__name
-    
-#     @property
-#     def name(self) -> str:
-#         return self.__name
-    
-#     @property
-#     def name(self) -> str:
-#         return self.__name
-    
-
-# x = Person('file.json')
-# pprint(x.name)
-
-# from typing import Protocol, TypeVar
-# T = TypeVar('T')
-# U = TypeVar('U')
-# class Series(Protocol['T', 'U']):
-#     pass
+# @dispatch(dict[int, dict[int, int]])
+# def to_pandas(*args: dict[NodeId, dict[NodeId, int]]) -> DataFrame[NodeId, Series[NodeId, int]]:
+#     print('dataframe')
+#     return pd.DataFrame()
 
 
 
-# test3: Series[float, int]
-# print(Series[float, int])
+
+# x: dict[int, dict[int, int]] = {
+#     1: {
+#         2: 100,
+#         3: 400,
+#     },
+#     2: {
+#         1: 200,
+#         3: 500,
+#     },
+#     3: {
+#         1: 483,
+#         2: 492,
+#     }
+# }
+
+# y = {
+#     1: 200,
+#     2: 400,
+#     3: 500
+# }
+
+# to_pandas(y)
+# to_pandas(x)
+
+# print(pd.DataFrame.from_dict(x)[1][3])
+# print('wreee')
+# print(pd.DataFrame.from_dict(x))
+# print(pd.Series(y))
 
 
-# df = pd.DataFrame(data=[[1,2], [3,4]])
-# print(df)
-# print(df.iloc[0])
-# print(type(df))
-# print(type(df.iloc[0]))
+# def test(*args):
+#     return args
 
-# class Test:
-#     __slots__ = '__yeet', '__name', '__age'
-#     __yeet: str
-
-#     def __init__(self, yeet: str = 'YEET', name: str = 'Thom', age: int = 20) -> None:
-#         self.__yeet = yeet
-#         self.__name = name
-
-#     @property
-#     def yeet(self) -> str:
-#         return self.__yeet
-    
-#     @property
-#     def name(self) -> str:
-#         return self.__name
-    
-#     # @property
-#     # def age(self) -> int:
-#     #     return self.__age
-    
-# x = Test()
-# # print(x.age)
-# from pathlib import Path
-# from pprint import pprint
-# from config import Config
-# CONFIG = Config()
-# pprint(CONFIG.GRAPHS_DIR_PATH)
-from integer_linear_problem import ILP
-x = ILP.from_excel('./lol.xlsx')
-x.N
-x.w
-x.c
-
-# testinggg: Path
-
-
-import timeit
-from numpy import int64
-import pandas as pd
-
-# x = pd.read_excel(r'.\..\brightspace-locker\Data assignment parcel transport 2 Large.xlsx', sheet_name='General information', header=None, index_col=0).squeeze('columns')
+# print()
+# x ,= test('hoi')
 # print(x)
-# print(x['transfer'])
 # print(type(x))
 
-f_ser = pd.read_excel(r'.\..\brightspace-locker\Data assignment parcel transport 2 Large.xlsx', sheet_name='f', index_col=0, header=None).squeeze('columns')
-print(set(f_ser.index))
+from integer_linear_problem import ILP
 
-# x = pd.Series([1,2,3,4,5,6,7,8,9,10], dtype=int)
-# def int_func():
-#     x[0] * 10
+ilp = ILP.from_excel(r'./../brightspace-locker/Data assignment parcel transport 2 Small.xlsx')
+print(type(ilp.w.index))
 
-# y = pd.Series([1,2,3,4,5,6,7,8,9,10], dtype=int64)
-# def int64_func():
-#     y[0] * 10
-
-# N = 10000
-
-# int_time = min(timeit.repeat(int_func, number=N))
-# int64_time = min(timeit.repeat(int64_func, number=N))
-# print(int_time)
-# print(int64_time)
-# print(f'improvement: {(int64_time - int_time) / int_time:.2%}')
+    # @staticmethod
+    # def dict_to_pandas(*dicts: dict) -> tuple[Series | DataFrame]:
+    #     pass
