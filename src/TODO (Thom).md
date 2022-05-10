@@ -1,4 +1,5 @@
 - global config
+    - inherit from Singleton class ( Config().CATEGORY.SETTING)
 - refactor ILP
     - implement faster get_z
     - implement even faster get_z for a single hub
