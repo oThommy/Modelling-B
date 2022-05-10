@@ -119,32 +119,31 @@ class Ilp:
         else:
             return self._get_z_multiple_hubs(hubs, non_hubs, E)
 
-    # @overload
-    # def get_z(self, H: Series[NodeId, bool], E: DataFrame[NodeId, Series[NodeId, bool]]) -> int:
-    #     FIXME: ADD COMMENT
+    def get_z(self, H: Series[NodeId, bool], E: DataFrame[NodeId, Series[NodeId, bool]]) -> int:
+        # FIXME: ADD COMMENT
 
-    #     z = 0
+        z = 0
 
-    #     for i in self.N:
-    #         # add fixed costs for establishing hubs
-    #         z += H[i] * self.f[i]
+        for i in self.N:
+            # add fixed costs for establishing hubs
+            z += H[i] * self.f[i]
 
-    #         for j in self.N:
-    #             # add costs of type hub to hub
-    #             z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
+            for j in self.N:
+                # add costs of type hub to hub
+                z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
                 
-    #             for k in self.N:
-    #                 # add costs of type non-hub to hub
-    #                 z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
+                for k in self.N:
+                    # add costs of type non-hub to hub
+                    z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
                     
-    #                 # add costs of type hub to non-hub
-    #                 z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
+                    # add costs of type hub to non-hub
+                    z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
                     
-    #                 for l in self.N:
-    #                     # add costs of type non-hub to non-hub
-    #                     z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
+                    for l in self.N:
+                        # add costs of type non-hub to non-hub
+                        z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
 
-    #     return z
+        return z
 
     def _get_z_single_hub(self, hub: NodeId, non_hubs: set[NodeId]) -> int:
         z = 0
