@@ -64,15 +64,29 @@
     # def dict_to_pandas(*dicts: dict) -> tuple[Series | DataFrame]:
     #     pass
 
-class Test:
-    __test: str = 'hoi'
+# class Test:
+#     __test: str = 'hoi'
 
-    @property 
-    def test(self) -> str:
-        return self.__test
+#     @property 
+#     def test(self) -> str:
+#         return self.__test
 
-    def yeet(self):
-        return self.test
+#     def yeet(self):
+#         return self.test
 
-lol = Test()
-print(lol.yeet())
+# lol = Test()
+# print(lol.yeet())
+
+from time import sleep
+from tqdm import tqdm
+
+with tqdm(total=100) as pbar:
+    for i in range(100):
+        sleep(0.01)
+        pbar.update(1)
+        if i == 40:
+            # print(pbar.update())
+            pbar.n = 99
+            pbar.update(1)
+            # pbar.update(29)
+            break

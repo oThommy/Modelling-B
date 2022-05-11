@@ -1,5 +1,5 @@
-from custom_typing import DataFrame, NodeId, Series
 from integer_linear_problem import Ilp
+from custom_typing import NodeId
 from config import Config
 from tqdm import tqdm
 import pandas as pd
@@ -10,7 +10,7 @@ FILEPATH = r'./../brightspace-locker/Data assignment parcel transport 2 Small.xl
 CONFIG = Config()
 ILP = Ilp.from_excel(FILEPATH)
 
-def get_E(hubs: set[NodeId], non_hubs: set[NodeId]) -> DataFrame[NodeId, Series[NodeId, bool]]:
+def get_E(hubs: set[NodeId], non_hubs: set[NodeId]) -> dict[NodeId, dict[NodeId, bool]]:
     E = {node: dict() for node in ILP.N}
     
     # non-hub to hub / hub to non-hub edges
@@ -31,7 +31,10 @@ def get_E(hubs: set[NodeId], non_hubs: set[NodeId]) -> DataFrame[NodeId, Series[
         for hub2 in hubs:
             E[hub1][hub2] = 1
 
-    return pd.DataFrame.from_dict(E)
+    return E
+
+def get_H(hubs, non_hubs):
+    return pd.Series({node: 1 if node in hubs else 0 for node in ILP.N})
 
 def main():
     z_min = float('inf')
@@ -61,8 +64,9 @@ def main():
 
             hubs.add(hub)
             non_hubs = ILP.N - hubs
-            E = get_E(hubs, non_hubs)
-            cur_z = ILP.get_z(hubs, non_hubs, E)
+            E_df = get_E(hubs, non_hubs)
+            H_ser = get_H(hubs, non_hubs)
+            cur_z = ILP.get_z_multiple_hubs(H_ser, E_df)
 
             if cur_z < z_min:
                 z_min = cur_z
