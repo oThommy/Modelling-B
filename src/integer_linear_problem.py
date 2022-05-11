@@ -62,7 +62,7 @@ class Ilp:
         return cls(N, collection, transfer, distribution, w_df, c_df, f_ser, filepath)
 
     @staticmethod
-    def df_drop_unnamed_cols(df: pd.DataFrame):
+    def df_drop_unnamed_cols(df: pd.DataFrame) -> pd.DataFrame:
         """removes all columns that start with 'Unnamed:'"""
         return df[df.columns.drop(list(df.filter(regex=r'^Unnamed:')))]
 
@@ -98,22 +98,26 @@ class Ilp:
     def filepath(self) -> Optional[str]:
         return self.__filepath
     
-    def get_z(
-        self, 
-        hubs: set[NodeId], 
-        non_hubs: set[NodeId], 
-        E: Optional[dict[NodeId, dict[NodeId, bool]]] = None
-    ) -> int:
+    def get_z_single_hub(self, hub: NodeId, non_hubs: set[NodeId]) -> int:
+        '''returns the value of the function that should be minimized for a single hub'''
 
-        '''returns the value of the function that should be minimized'''
+        z = 0
 
-        if len(hubs) == 1:
-            return self._get_z_single_hub(next(iter(hubs)), non_hubs)
-        # else:
-        #     return self._get_z_multiple_hubs(hubs, non_hubs, E)
+        # add fixed costs for establishing hub
+        z += self.f[hub]
+
+        for non_hub_dest in non_hubs:
+            # add costs of type hub to non-hub
+            z += self.w[hub][non_hub_dest] * self.distribution * self.c[hub][non_hub_dest]
+
+            for non_hub_src in non_hubs:
+                # add costs of type non-hub to non-hub
+                z += self.w[non_hub_src][non_hub_dest] * (self.collection * self.c[non_hub_src][hub] + self.distribution * self.c[hub][non_hub_dest])
+        
+        return z
 
     def get_z_multiple_hubs(self, H: dict[NodeId, bool], E: dict[NodeId, dict[NodeId, bool]]) -> int:
-        # FIXME: ADD COMMENT
+        '''returns the value of the function that should be minimized for multiple hubs'''
 
         z = 0
 
@@ -137,49 +141,6 @@ class Ilp:
                         z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.__w[i][j] * (self.__distribution * self.__c[l][j] + self.__transfer * self.__c[k][l] + self.__collection * self.__c[i][k])
                         
         return z
-        # # FIXME: ADD COMMENT
-
-        # z = 0
-
-        # for i in self.N:
-        #     # add fixed costs for establishing hubs
-        #     z += H[i] * self.f[i]
-
-        #     for j in self.N:
-        #         # add costs of type hub to hub
-        #         z += H[i] * H[j] * self.w[i][j] * self.transfer * self.c[i][j]
-                
-        #         for k in self.N:
-        #             # add costs of type non-hub to hub
-        #             z += (1 - H[i]) * H[j] * E[i][k] * self.w[i][j] * (self.collection * self.c[i][k] + self.transfer * self.c[k][j])
-                    
-        #             # add costs of type hub to non-hub
-        #             z += H[i] * (1 - H[j]) * E[k][j] * self.w[i][j] * (self.transfer * self.c[i][k] + self.distribution * self.c[k][j])
-                    
-        #             for l in self.N:
-        #                 # add costs of type non-hub to non-hub
-        #                 z += (1 - H[i]) * (1 - H[j]) * E[i][k] * E[l][j] * self.w[i][j] * (self.distribution * self.c[l][j] + self.transfer * self.c[k][l] + self.collection * self.c[i][k])
-
-        # return z
-
-    def _get_z_single_hub(self, hub: NodeId, non_hubs: set[NodeId]) -> int:
-        z = 0
-
-        # add fixed costs for establishing hub
-        z += self.f[hub]
-
-        for non_hub_dest in non_hubs:
-            # add costs of type hub to non-hub
-            z += self.w[hub][non_hub_dest] * self.distribution * self.c[hub][non_hub_dest]
-
-            for non_hub_src in non_hubs:
-                # add costs of type non-hub to non-hub
-                z += self.w[non_hub_src][non_hub_dest] * (self.collection * self.c[non_hub_src][hub] + self.distribution * self.c[hub][non_hub_dest])
-        
-        return z
-
-    # def _get_z_multiple_hubs() -> int:
-    #     pass
 
     def __repr__(self) -> str:
         rep = f"""

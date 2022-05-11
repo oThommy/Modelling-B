@@ -34,7 +34,7 @@ def get_E(hubs: set[NodeId], non_hubs: set[NodeId]) -> dict[NodeId, dict[NodeId,
     return E
 
 def get_H(hubs, non_hubs):
-    return pd.Series({node: 1 if node in hubs else 0 for node in ILP.N})
+    return {node: 1 if node in hubs else 0 for node in ILP.N}
 
 def main():
     z_min = float('inf')

@@ -78,12 +78,13 @@
 # print(lol.yeet())
 
 from time import sleep
-from tqdm import tqdm
+from tqdm import tqdm, std
 
 with tqdm(total=100) as pbar:
     for i in range(100):
         sleep(0.01)
         pbar.update(1)
+        print(type(pbar))
         if i == 40:
             # print(pbar.update())
             pbar.n = 99

@@ -7,6 +7,10 @@
     - get_z_from_dict()?
     - test ILP extensively
     - remove @property?
+    - non_hubs optional?
+    - Ilp instead of ILP
+    - get_z (hub, non_hubs, E) implementation
+    - get_z funtion instead of single and multiple needed?
 - refactor graph_visualiser
 - make log class (or define on ILP?)
     - retreive data
