@@ -40,6 +40,8 @@ def complete_pbar(pbar: std.tqdm) -> None:
     pbar.n = 99
     pbar.update(1)
 
+def intuitive_algo_2(): ...
+
 def main():
     z_min = float('inf')
     min_hubs = set()

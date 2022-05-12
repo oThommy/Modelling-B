@@ -1,6 +1,10 @@
+from dataclasses import field, Field
 from datetime import datetime
 import os
+from typing import Optional, TypeVar
 
+
+T = TypeVar('T')
 
 def remove_extension(base: str) -> str:
     '''returns basename without extension'''
@@ -18,7 +22,12 @@ def count_dirs(dir_path: str) -> int:
 
     return len(next(os.walk(dir_path))[1])
 
-def get_date(sep: str = '-') -> str:
-    '''returns date string with given seperator'''
+def get_formatted_date(sep: str = '-', date: Optional[datetime] = datetime.now()) -> str:
+    '''returns date string formatted with given seperator'''
 
-    return f'{datetime.now():%Y-%m-%d-%H-%M-%S}'
+    return date.strftime(sep.join(['%Y', '%m', '%d', '%H', '%M', '%S']))
+
+def default_fact_field(obj: T) -> Field:
+    '''returns dataclass field with as default_factory the passed obj'''
+
+    return field(default_factory=lambda: obj)

@@ -5,7 +5,7 @@ from typing import Protocol, TypeVar
 K = TypeVar('K')
 V = TypeVar('V')
 
-class NodeId:
+class NodeId(int):
     pass
 
 class Series(Protocol[K, V]):

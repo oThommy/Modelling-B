@@ -1,5 +1,7 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, Field
+from typing import TypeVar
 from custom_typing import Singleton
+import utils
 import os
 
 
@@ -17,13 +19,14 @@ class Config(Singleton):
 
     # OTHER
     TQDM_NCOLS: int = 100
+    PICKLE_PROTOCOL: int = 5
 
     # GRAPH VISUALISER
     MIN_NODE_SIZE: int = 20
     MAX_NODE_SIZE: int = 55
     MIN_EDGE_WIDTH: int = 7
     MAX_EDGE_WIDTH: int = 25
-    GRAPH_OPTIONS: dict = field(default_factory={
+    GRAPH_OPTIONS: dict = utils.default_fact_field({
         'nodes': {
             'borderWidthSelected': 3,
             'color': {

@@ -28,3 +28,4 @@
 - color for hub and color for non-hub
 - excel sheet for demo graph visualiser
 - Config().GRAPH_OPTIONS not working
+- gen documentation?
