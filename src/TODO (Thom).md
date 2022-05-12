@@ -20,3 +20,4 @@
 - implement second intuitive algorithm
 - remove pandera?
 - uitzoeken hoe je andere solvers kunt toevoegen aan requirements.txt en environment.yml
+- type hints everywhere
