@@ -1,82 +1,15 @@
+from integer_linear_problem import Ilp
 from pyvis.network import Network
+from custom_typing import NodeId
 from typing import Optional
+from config import Config
 import pandas as pd
 import numpy as np
 import pathlib
+import utils
 import json
 import os
 
-NodeId = int
-
-GRAPHS_DIR= os.path.abspath(r'./graphs')
-MIN_NODE_SIZE = 20
-MAX_NODE_SIZE = 55
-MIN_EDGE_WIDTH = 7
-MAX_EDGE_WIDTH = 25
-# TODO: color for hub and color for non-hub
-GRAPH_OPTIONS = {
-    'nodes': {
-        'borderWidthSelected': 3,
-        'color': {
-            'border': 'rgba(43,124,233,1)',
-            'background': 'rgba(151,194,252,1)',
-            'highlight': {
-                'border': 'rgba(43,124,233,1)',
-                'background': 'rgba(210,229,255,1)'
-            },
-            'hover': {
-                'border': 'rgba(43,124,233,1)',
-                'background': 'rgba(210,229,255,1)'
-            }
-        },
-        'scaling': {
-            'min': MIN_NODE_SIZE,
-            'max': MAX_NODE_SIZE,
-        },
-        "font": {
-            "size": 20
-        }
-    },
-    'edges': {
-        'color': {
-            'inherit': False,
-            'color': 'rgba(43,124,233,1)',
-            'highlight': 'rgba(114,166,229,1)',
-            'hover': 'rgba(114,166,229,1)'
-        },
-        'hoverWidth': 1.5,
-        'smooth': False,
-        'scaling': {
-            'min': MIN_EDGE_WIDTH,
-            'max': MAX_EDGE_WIDTH
-        },
-        'smooth': {
-            'type': 'discrete',
-            'roundness': 0.6
-        },
-    },
-    'physics': {
-        'hierarchicalRepulsion': {
-            'centralGravity': 0,
-            'springLength': 150,
-            'springConstant': 0.01,
-            'damping': 0.09,
-            'nodeDistance': 300
-        },
-        'minVelocity': 0.75,
-        'solver': 'hierarchicalRepulsion'
-    },
-    # 'physics': {
-    #     'barnesHut': {
-    #         'centralGravity': 0,
-    #         'springLength': 300,
-    #         'springConstant': 0.01,
-    #         'damping': 0.09,
-    #     },
-    #     'minVelocity': 0.75,
-    #     'solver': 'barnesHut'
-    # }
-}
 
 # returns all possible edges between nodes
 def get_max_edges(nodes: set[NodeId]) -> tuple[NodeId, NodeId]:
@@ -92,26 +25,33 @@ def get_max_hub_deg(nodes: set[NodeId]) -> int:
 
 # TODO: make non-linear line (also for get_scaled_edge_width) and maybe calculate min and max edge with from used edges
 def get_scaled_node_size(connections: int, max_connections: int, min_connections: int=1) -> float:
-    return (MAX_NODE_SIZE - MIN_NODE_SIZE) / (max_connections - min_connections) * (connections - min_connections) + MIN_NODE_SIZE
+    return (Config().MAX_NODE_SIZE - Config().MIN_NODE_SIZE) / (max_connections - min_connections) * (connections - min_connections) + Config().MIN_NODE_SIZE
 
 def get_scaled_edge_width(cost: int, min_cost: int, max_cost: int) -> float:
-    return (MAX_EDGE_WIDTH - MIN_EDGE_WIDTH) / (max_cost - min_cost) * (cost - min_cost) + MIN_EDGE_WIDTH
+    return (Config().MAX_EDGE_WIDTH - Config().MIN_EDGE_WIDTH) / (max_cost - min_cost) * (cost - min_cost) + Config().MIN_EDGE_WIDTH
 
-def visualise_graph(N: set[NodeId], H: dict[NodeId, bool], E: dict[NodeId, dict[NodeId, bool]], c: dict[NodeId, dict[NodeId, int]], filepath: Optional[str]=None) -> None:
-    hubs = {node for node, isHub in H.items() if isHub}
-    non_hubs = N - hubs
+def visualise_graph(
+    hubs: set[NodeId], 
+    non_hubs: set[NodeId], 
+    E: dict[NodeId, dict[NodeId, bool]], 
+    ilp: Optional[Ilp], 
+    filepath: Optional[str] = None
+    ) -> None:
 
-    if filepath is not None:
-        filename = pathlib.Path(filepath).stem
-        graph_path = os.path.join(GRAPHS_DIR, fr'graph_{filename}.html')
+    '''visualise graph in an interactable graphical interface'''
+    
+    if filepath is None:
+        id = utils.count_dirs(Config().OTHER_GRAPHS_DIR_PATH) + 1
+        graph_base = fr'graph_{id}.html'
+        graph_path = os.path.realpath(os.path.join(Config().OTHER_GRAPHS_DIR_PATH, graph_base))
     else:
-        graph_path = os.path.join(GRAPHS_DIR, r'graph.html')
+        graph_path = os.path.realpath(filepath)
 
-    # g = Network(bgcolor='#222222', font_color='white')
     g = Network(width='100%', height='100%', bgcolor='#222222', font_color='white')
     
     max_hub_deg = get_max_hub_deg(hubs)
-    hub_connections = {hub: max_hub_deg for hub in hubs} # every hub has at least max_hub_deg edges, but may additionally have edges to non-hubs
+    # every hub has at least max_hub_deg edges, but may additionally have edges to non-hubs
+    hub_connections = {hub: max_hub_deg for hub in hubs}
     connected_hub = dict()
     for non_hub in non_hubs:
         # count amount of edges from hub to non_hub
@@ -122,54 +62,35 @@ def visualise_graph(N: set[NodeId], H: dict[NodeId, bool], E: dict[NodeId, dict[
         connected_hub[non_hub] = hub
 
     # add non-hubs nodes
-    g.add_nodes(list(non_hubs), size=[get_scaled_node_size(1, len(N)) for _ in range(len(non_hubs))])
+    g.add_nodes(list(non_hubs), size=[get_scaled_node_size(1, len(ilp.N)) for _ in range(len(non_hubs))])
     
     # add hub nodes
     max_connections = max(hub_connections.values())
     for hub in hubs:
         g.add_node(hub, size=get_scaled_node_size(hub_connections[hub], max_connections))
 
-    c_arr = pd.DataFrame(c).to_numpy()
+    c_arr = pd.DataFrame.from_dict(ilp.c).to_numpy()
     min_cost = np.min(c_arr[np.nonzero(c_arr)]) # ignore costs of 0
     max_cost = c_arr.max()
 
     # add all edges between hubs
     for src, target in get_max_edges(hubs):
-        g.add_edge(src, target, width=get_scaled_edge_width(c[src][target], min_cost, max_cost))
+        g.add_edge(src, target, width=get_scaled_edge_width(ilp.c[src][target], min_cost, max_cost))
 
     # add all edges from non_hub to hub
     for src in non_hubs:
         target = connected_hub[src]
-        g.add_edge(src, target, width=get_scaled_edge_width(c[src][target], min_cost, max_cost))
+        g.add_edge(src, target, width=get_scaled_edge_width(ilp.c[src][target], min_cost, max_cost))
     
-    if True:
-        g.set_options(json.dumps(GRAPH_OPTIONS))
-    else:
-        g.show_buttons(filter_=['edges', 'physics'])
+    g.set_options(json.dumps(Config().GRAPH_OPTIONS))
     g.show(graph_path)
 
 def main():
     print('Visualised graph demo.')
     visualise_graph(
-        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
-        {
-            1: 1,
-            2: 1,
-            3: 1,
-            4: 1,
-            5: 1,
-            6: 1,
-            7: 1,
-            8: 0,
-            9: 0,
-            10: 0,
-            11: 0,
-            12: 0,
-            13: 0,
-            14: 0,
-            15: 0
-        },
-        {
+        hubs=set(range(1, 8)),
+        non_hubs=set(range(8, 16)),
+        E={
             8: {
                 1: 0,
                 2: 0,
@@ -243,7 +164,7 @@ def main():
                 7: 1
             }
         },
-        {
+        ilp={
             1: {
                 1: 0,
                 2: 12,
@@ -500,9 +421,8 @@ def main():
                 15: 0
             }
         },
-        r'demo'
+        filename=os.path.join(Config().OTHER_GRAPHS_DIR_PATH, r'demo_graph.html')
     )
 
 if __name__ == '__main__':
     main()
-        

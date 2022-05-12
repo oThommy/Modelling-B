@@ -13,6 +13,8 @@
     - get_z funtion instead of single and multiple needed?
 - refactor graph_visualiser
 - make log class (or define on ILP?)
+    - refactor ID?
+    - refactor: realpath and relative path variable
     - retreive data
 - refactor repo
     - delete bs-locker, latex-overleaf, etc.
@@ -20,4 +22,9 @@
 - implement second intuitive algorithm
 - remove pandera?
 - uitzoeken hoe je andere solvers kunt toevoegen aan requirements.txt en environment.yml
-- type hints everywhere
+- type hints 
+- refactor all paths to real paths
+- make flow dictate node size
+- color for hub and color for non-hub
+- excel sheet for demo graph visualiser
+- Config().GRAPH_OPTIONS not working
