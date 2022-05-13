@@ -1,16 +1,19 @@
+import inspect
 import __main__
 from pathlib import Path
+from pprint import pprint
 import webbrowser
 from dataclasses import dataclass
 import os
 import __main__
-from config import Config
+# from config import Config
 from integer_linear_problem import Ilp
 import utils
 from datetime import datetime
 from solution import Solution
 from time import time
 import pickle
+import dill
 
 # print(Config().ROOT_DIR_PATH)
 # print(Config().OUT_DIR_PATH)
@@ -77,6 +80,23 @@ import pickle
 
 # sol.save()
 
-with open(r'out\test\3-Data assignment parcel transport 2 Small-2022-05-13-17-37-58\solution_3_Data assignment parcel transport 2 Small_2022_05_13_17_37_58.pickle', 'rb') as file:
-    sol: Solution = pickle.load(file)
-sol.print()
+# yeetfile = r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\test\6-Data assignment parcel transport 2 Small-2022-05-13-18-43-29\solution_6_Data assignment parcel transport 2 Small_2022_05_13_18_43_29.pickle'
+# with open(yeetfile, 'rb') as file:
+#     sol: Solution = pickle.load(file)
+# sol.print()
+# config = sol.config
+# print(config.OUT_DIR_PATH)
+
+# from test3 import Greeting, greeting1, greeting2
+
+# g = Greeting([greeting1, greeting2])
+# with open('DELETE_TEST.pickle', 'wb') as file:
+#     dill.dump(g, file)
+def greeting2():
+    return "YEEEEEEEEET!"
+# g = Greeting([greeting1, greeting2])
+with open('DELETE_TEST.pickle', 'rb') as file:
+    g = dill.load(file)
+print(type(g))
+g.greet()
+pprint(__main__)

@@ -18,6 +18,7 @@ class Solution:
     non_hubs: set[NodeId]
     E: dict[NodeId, dict[NodeId, bool]]
     ilp: Ilp
+    config: Config = field(init=False, default=Config())
     __date: datetime = field(init=False, default=datetime.now())
     __id: int = field(init=False)
     __algo_basename: str = field(
@@ -73,7 +74,7 @@ class Solution:
             pickle_base = fr'solution_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.pickle'
 
         pickle_path = self.__save_dir_path / pickle_base
-        
+
         with open(pickle_path, 'wb') as file:
             pickle.dump(self, file, Config().PICKLE_PROTOCOL)
 
@@ -81,3 +82,8 @@ class Solution:
         print(self.__algo_dir_path)
         print(self.__save_dir_path)
         print(self.__inputfile_basename)
+
+
+    """
+    config
+    """
