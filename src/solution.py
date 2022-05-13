@@ -24,18 +24,23 @@ class Solution:
         init=False, 
         default=Path(__main__.__file__).stem # returns script name that was invoked from the command line (instead of this module)
     )
-    # __input_basename: str = field(init=False)
-    # __algo_dir_path: str = field(init=False)
-    # __save_dir_path: str = field(init=False)
 
     @property
     def __algo_dir_path(self) -> Path:
         return Config().OUT_DIR_PATH / self.__algo_basename
 
     @property
-    def __input_basename(self) -> Path:
-        if 
-        return self.ilp.inputfile_path.stem
+    def __inputfile_basename(self) -> Path:
+        return self.ilp.inputfile_path.stem if self.ilp.inputfile_path is not None else None
+
+    @property
+    def __save_dir_path(self) -> Path:
+        if self.__inputfile_basename is None:
+            save_dir_name = fr'{self.__id}-{utils.get_formatted_date("-", self.__date)}'
+        else:
+            save_dir_name = fr'{self.__id}-{self.__inputfile_basename}-{utils.get_formatted_date("-", self.__date)}'
+
+        return self.__algo_dir_path / save_dir_name
 
     def __post_init__(self) -> None:
         if self.__algo_dir_path.exists():
@@ -43,21 +48,17 @@ class Solution:
         else:
             self.__id = 1
 
-        if self.ilp.filepath is not None:
-            input_filepath = os.path.realpath(self.ilp.filepath)
-            input_base = os.path.basename(input_filepath)
-            self.__input_basename = utils.remove_extension(input_base)
-
-        save_dir_name = fr'{self.__id}-{self.__input_basename}-{utils.get_formatted_date("-", self.__date)}'
-        self.__save_dir_path = os.path.realpath(os.path.join(self.__algo_dir_path, save_dir_name))
-
     def visualise(self) -> None:
         '''visualise graph in an interactable graphical interface'''
         
         utils.ensure_dir_exists(self.__save_dir_path)
 
-        graph_base = fr'graph_{self.__id}_{self.__input_basename}_{utils.get_formatted_date("_", self.__date)}.html'
-        graph_path = os.path.realpath(os.path.join(self.__save_dir_path, graph_base))
+        if self.__inputfile_basename is None:
+            graph_base = fr'graph_{self.__id}_{utils.get_formatted_date("_", self.__date)}.html'
+        else:
+            graph_base = fr'graph_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.html'
+
+        graph_path = self.__save_dir_path / graph_base
 
         visualise_graph(self.hubs, self.non_hubs, self.E, self.ilp, graph_path)
 
@@ -66,13 +67,17 @@ class Solution:
 
         utils.ensure_dir_exists(self.__save_dir_path)
 
-        pickle_base = fr'solution_{self.__id}_{self.__input_basename}_{utils.get_formatted_date("_", self.__date)}.pickle'
-        pickle_path = os.path.realpath(os.path.join(self.__save_dir_path, pickle_base))
+        if self.__inputfile_basename is None:
+            pickle_base = fr'solution_{self.__id}_{utils.get_formatted_date("_", self.__date)}.pickle'
+        else:
+            pickle_base = fr'solution_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.pickle'
+
+        pickle_path = self.__save_dir_path / pickle_base
+        
         with open(pickle_path, 'wb') as file:
             pickle.dump(self, file, Config().PICKLE_PROTOCOL)
 
-
-
     def print(self):
-        ...
-
+        print(self.__algo_dir_path)
+        print(self.__save_dir_path)
+        print(self.__inputfile_basename)

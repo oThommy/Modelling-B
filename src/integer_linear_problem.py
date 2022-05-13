@@ -1,3 +1,5 @@
+from pathlib import Path
+from config import Config
 from custom_typing import NodeId, Series, DataFrame
 from typing_extensions import Self
 from typing import Optional
@@ -8,7 +10,7 @@ import os
 
 
 class Ilp:
-    __slots__ = '__N', '__collection', '__transfer', '__distribution', '__w', '__c', '__f', '__filepath'
+    __slots__ = '__N', '__collection', '__transfer', '__distribution', '__w', '__c', '__f', '__inputfile_basename'
 
     def __init__(
         self,
@@ -19,8 +21,10 @@ class Ilp:
         w: dict[NodeId, dict[NodeId, int]],
         c: dict[NodeId, dict[NodeId, int]],
         f: dict[NodeId, int],
-        filepath: Optional[str] = None
+        inputfile_path: Optional[Path | str] = None
     ) -> None:
+
+        '''Create Ilp dataset. inputfile_path must be in Config().IN_DIR_PATH'''
 
         self.__N = N
         self.__collection = collection
@@ -29,15 +33,16 @@ class Ilp:
         self.__w = w
         self.__c = c
         self.__f = f
-        self.__filepath = os.path.abspath(filepath) if filepath is not None else None
+        self.__inputfile_basename = Path(inputfile_path).name if inputfile_path is not None else None
 
     @classmethod
-    def from_excel(cls, filepath: str) -> Self:
-        '''Load Ilp dataset from excel'''
+    def from_excel(cls, inputfile_path: Path | str) -> Self:
+        '''Load Ilp dataset from excel. inputfile_path must be in Config().IN_DIR_PATH'''
 
-        filepath = os.path.abspath(filepath)
+        inputfile_basename = Path(inputfile_path).name
+        inputfile_path = Config().IN_DIR_PATH / inputfile_basename
 
-        gen_info_ser = pd.read_excel(filepath, sheet_name='General information', header=None, index_col=0).squeeze('columns')
+        gen_info_ser = pd.read_excel(inputfile_path, sheet_name='General information', header=None, index_col=0).squeeze('columns')
         # due to a mistake in the excel dataset, the collection may contain an extra space
         try:
             collection = gen_info_ser['collection ']
@@ -47,19 +52,19 @@ class Ilp:
         distribution = gen_info_ser['distribution']
 
         # take transpose since vertical column is the origin and horizontal row the destination
-        w_df = pd.read_excel(filepath, sheet_name='w', index_col=0).T
+        w_df = pd.read_excel(inputfile_path, sheet_name='w', index_col=0).T
         w_df = Ilp.df_drop_unnamed_cols(w_df)
         w_df = w_df.to_dict()
 
-        c_df = pd.read_excel(filepath, sheet_name='c', index_col=0).T
+        c_df = pd.read_excel(inputfile_path, sheet_name='c', index_col=0).T
         c_df = Ilp.df_drop_unnamed_cols(c_df)
         c_df = c_df.to_dict()
 
-        f_ser = pd.read_excel(filepath, sheet_name='f', index_col=0, header=None).squeeze('columns')
+        f_ser = pd.read_excel(inputfile_path, sheet_name='f', index_col=0, header=None).squeeze('columns')
         N = set(f_ser.index)
         f_ser = f_ser.to_dict()
 
-        return cls(N, collection, transfer, distribution, w_df, c_df, f_ser, filepath)
+        return cls(N, collection, transfer, distribution, w_df, c_df, f_ser, inputfile_basename)
 
     @staticmethod
     def df_drop_unnamed_cols(df: pd.DataFrame) -> pd.DataFrame:
@@ -95,8 +100,8 @@ class Ilp:
         return self.__f
     
     @property
-    def filepath(self) -> Optional[str]:
-        return self.__filepath
+    def inputfile_path(self) -> Optional[Path]:
+        return Config().IN_DIR_PATH / self.__inputfile_basename if self.__inputfile_basename is not None else None
     
     def get_z_single_hub(self, hub: NodeId, non_hubs: set[NodeId]) -> int:
         '''returns the value of the function that should be minimized for a single hub'''
@@ -145,7 +150,7 @@ class Ilp:
     def __repr__(self) -> str:
         rep = f"""
 Ilp(
-    filepath: {self.filepath}
+    inputfile_path: {self.inputfile_path}
     N: {self.N}
     collection: {self.collection}
     transfer: {self.transfer}

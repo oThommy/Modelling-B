@@ -58,6 +58,16 @@ import pickle
 # func3()
 
 
+# sol.save()
+# file_dir_path = Path(__file__).parent
+# print(file_dir_path)
+# path = Path(file_dir_path / 'yesdklfjsl').relative_to(file_dir_path)
+# utils.ensure_dir_exists(Path(r'HOI'))
+# inputfile_path = r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx'
+# inputfile_path = r'Data assignment parcel transport 2 Small.xlsx'
+# x = Path(inputfile_path).resolve().relative_to(Config().IN_DIR_PATH)
+# print(x)
+
 # sol = Solution(
 #     493893,
 #     {1,2,3}, 
@@ -65,9 +75,8 @@ import pickle
 #     {1: {2: 1, 3: 0}},
 #     Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx'))
 
-# print(sol)
 # sol.save()
-# file_dir_path = Path(__file__).parent
-# print(file_dir_path)
-# path = Path(file_dir_path / 'yesdklfjsl').relative_to(file_dir_path)
-utils.ensure_dir_exists(Path(r'HOI'))
+
+with open(r'out\test\3-Data assignment parcel transport 2 Small-2022-05-13-17-37-58\solution_3_Data assignment parcel transport 2 Small_2022_05_13_17_37_58.pickle', 'rb') as file:
+    sol: Solution = pickle.load(file)
+sol.print()
