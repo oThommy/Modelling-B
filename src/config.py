@@ -1,21 +1,45 @@
-from dataclasses import dataclass, field, Field
-from typing import TypeVar
+from dataclasses import dataclass, field
 from custom_typing import Singleton
+from pathlib import Path
 import utils
-import os
 
 
 @dataclass(frozen=True, slots=True)
 class Config(Singleton):
     # PATHS
-    ROOT_DIR_PATH: str = os.path.realpath(os.path.dirname(__file__))
-    OUT_DIR_PATH: str = os.path.realpath(os.path.join(ROOT_DIR_PATH, r'out'))
-    IN_DIR_PATH: str = os.path.realpath(os.path.join(ROOT_DIR_PATH, r'in'))
-    OTHER_GRAPHS_DIR_PATH: str = os.path.realpath(os.path.join(OUT_DIR_PATH, r'other-graphs')) # directory for random graphs
+    @property
+    def ROOT_DIR_PATH(self) -> Path:
+        return Path(__file__).parent
 
-    DATA_VERY_SMALL_PATH: str = os.path.realpath(os.path.join(IN_DIR_PATH, r'Data assignment parcel transport 2 very small Small.xlsx'))
-    DATA_SMALL_PATH: str = os.path.realpath(os.path.join(IN_DIR_PATH, r'Data assignment parcel transport 2 very small Small.xlsx'))
-    DATA_LARGE_PATH: str = os.path.realpath(os.path.join(IN_DIR_PATH, r'Data assignment parcel transport 2 very small Small.xlsx'))
+    @property
+    def OUT_DIR_PATH(self) -> Path:
+        return self.ROOT_DIR_PATH / r'out'
+
+    @property
+    def IN_DIR_PATH(self) -> Path:
+        return self.ROOT_DIR_PATH / r'in'
+
+    @property
+    def OTHER_GRAPHS_DIR_PATH(self) -> Path:
+        '''directory for random graphs'''
+
+        return self.ROOT_DIR_PATH / r'other-graphs'
+
+    @property
+    def DATA_VERY_SMALL_PATH(self) -> Path:
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 very small Small.xlsx'
+
+    @property
+    def DATA_SMALL_PATH(self) -> Path:
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 very small Small.xlsx'
+
+    @property
+    def DATA_LARGE_PATH(self) -> Path:
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 very small Small.xlsx'
+
+    @property
+    def DATA_HUGE_PATH(self) -> Path:
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 huge.xlsx'
 
     # OTHER
     TQDM_NCOLS: int = 100

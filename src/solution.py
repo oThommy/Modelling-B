@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-import os
 from custom_typing import NodeId
 from integer_linear_problem import Ilp
 import sys
@@ -9,6 +8,7 @@ from config import Config
 import utils
 from graph_visualiser import visualise_graph
 import pickle
+from pathlib import Path
 
 
 @dataclass(slots=True)
@@ -20,18 +20,25 @@ class Solution:
     ilp: Ilp
     __date: datetime = field(init=False, default=datetime.now())
     __id: int = field(init=False)
-    __basename: str = field(init=False)
-    __input_basename: str = field(init=False)
-    __algo_dir_path: str = field(init=False)
-    __save_dir_path: str = field(init=False)
+    __algo_basename: str = field(
+        init=False, 
+        default=Path(__main__.__file__).stem # returns script name that was invoked from the command line (instead of this module)
+    )
+    # __input_basename: str = field(init=False)
+    # __algo_dir_path: str = field(init=False)
+    # __save_dir_path: str = field(init=False)
+
+    @property
+    def __algo_dir_path(self) -> Path:
+        return Config().OUT_DIR_PATH / self.__algo_basename
+
+    @property
+    def __input_basename(self) -> Path:
+        if 
+        return self.ilp.inputfile_path.stem
 
     def __post_init__(self) -> None:
-        base = os.path.basename(__main__.__file__) # returns script name that was invoked from the command line (instead of this module)
-        self.__basename = utils.remove_extension(base)
-
-        self.__algo_dir_path = os.path.realpath(os.path.join(Config().OUT_DIR_PATH, self.__basename))
-
-        if os.path.exists(self.__algo_dir_path):
+        if self.__algo_dir_path.exists():
             self.__id = utils.count_dirs(self.__algo_dir_path) + 1
         else:
             self.__id = 1

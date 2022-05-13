@@ -1,3 +1,6 @@
+import __main__
+from pathlib import Path
+import webbrowser
 from dataclasses import dataclass
 import os
 import __main__
@@ -64,9 +67,7 @@ import pickle
 
 # print(sol)
 # sol.save()
-
-with open(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\test\3-Data assignment parcel transport 2 Small-2022-05-12-21-04-50\solution_3_Data assignment parcel transport 2 Small_2022_05_12_21_04_50.pickle', 'rb') as file:
-    sol: Solution = pickle.load(file)
-
-print(sol.hubs)
-print(sol)
+# file_dir_path = Path(__file__).parent
+# print(file_dir_path)
+# path = Path(file_dir_path / 'yesdklfjsl').relative_to(file_dir_path)
+utils.ensure_dir_exists(Path(r'HOI'))
