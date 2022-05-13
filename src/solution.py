@@ -1,16 +1,11 @@
-from dataclasses import MISSING, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime
-import inspect
-from typing_extensions import Self
-from typing import Iterable
-from custom_typing import NodeId, Singleton
+from custom_typing import NodeId
 from integer_linear_problem import Ilp
-import sys
 import __main__
 from config import Config
 import utils
 from graph_visualiser import visualise_graph
-import pickle
 from pathlib import Path
 import dill
 
@@ -47,32 +42,6 @@ class Solution:
 
         return self.__algo_dir_path / save_dir_name
 
-    def __new__(cls, *args, **kwargs) -> Self:
-        
-        # Solution._mainify(NodeId, Config, dataclass, field)
-        cls._mainify(cls)
-        cls = getattr(__main__, cls.__name__)
-        obj = object().__new__(cls)
-        obj.__init__(*args, **kwargs)
-
-
-        return obj
-
-    @staticmethod
-    def _mainify(*objs: Iterable[object]) -> None:
-        '''If obj is not defined in '''
-
-        for obj in objs:
-            if obj.__module__ == '__main__':
-                print('RETURNED')
-                print(obj)
-                continue
-
-            source_code_str = inspect.getsource(obj)
-            compiled_sc = compile(source_code_str, '<string>', 'exec')
-            exec(compiled_sc, __main__.__dict__)
-            # return getattr(__main__, obj.__name__)
-
     def __post_init__(self) -> None:
         if self.__algo_dir_path.exists():
             self.__id = utils.count_dirs(self.__algo_dir_path) + 1
@@ -107,7 +76,7 @@ class Solution:
 
         with open(pickle_path, 'wb') as file:
             # pickle.dump(self, file, Config().PICKLE_PROTOCOL)
-            dill.dump(self, file)
+            dill.dump(self, file) # FIXME: protocol
 
     def print(self):
         print(self.__algo_dir_path)

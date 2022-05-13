@@ -1,9 +1,7 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from custom_typing import Singleton
 from pathlib import Path
 import utils
-import __main__
-import inspect
 
 
 @dataclass(frozen=True, slots=True)
@@ -115,29 +113,3 @@ class Config(Singleton):
         #     'solver': 'barnesHut'
         # }
     })
-
-    def __new__(cls, *args, **kwargs):
-        
-        cls._mainify(Singleton)
-        cls._mainify(cls)
-        cls = getattr(__main__, cls.__name__)
-        obj = object().__new__(cls)
-        obj.__init__(*args, **kwargs)
-
-
-        return obj
-
-    @staticmethod
-    def _mainify(*objs) -> None:
-        '''If obj is not defined in '''
-
-        for obj in objs:
-            if obj.__module__ == '__main__':
-                print('RETURNED')
-                print(obj)
-                continue
-
-            source_code_str = inspect.getsource(obj)
-            compiled_sc = compile(source_code_str, '<string>', 'exec')
-            exec(compiled_sc, __main__.__dict__)
-            # return getattr(__main__, obj.__name__)
