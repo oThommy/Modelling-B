@@ -71,32 +71,38 @@ import dill
 # x = Path(inputfile_path).resolve().relative_to(Config().IN_DIR_PATH)
 # print(x)
 
-# sol = Solution(
-#     493893,
-#     {1,2,3}, 
-#     {4,5,6},
-#     {1: {2: 1, 3: 0}},
-#     Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx'))
+sol = Solution(
+    493893,
+    {1,2,3}, 
+    {4,5,6},
+    {1: {2: 1, 3: 0}},
+    Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx'))
+print(sol)
+print(sol.__module__)
+sol.save()
 
-# sol.save()
+sol.save()
 
-# yeetfile = r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\test\6-Data assignment parcel transport 2 Small-2022-05-13-18-43-29\solution_6_Data assignment parcel transport 2 Small_2022_05_13_18_43_29.pickle'
+# yeetfile = r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\test\7-Data assignment parcel transport 2 Small-2022-05-13-21-32-31\solution_7_Data assignment parcel transport 2 Small_2022_05_13_21_32_31.pickle'
 # with open(yeetfile, 'rb') as file:
-#     sol: Solution = pickle.load(file)
+#     sol: Solution = dill.load(file)
 # sol.print()
-# config = sol.config
-# print(config.OUT_DIR_PATH)
+# Config = sol.config_class
+# print(Config().OUT_DIR_PATH)
+
+
 
 # from test3 import Greeting, greeting1, greeting2
 
 # g = Greeting([greeting1, greeting2])
 # with open('DELETE_TEST.pickle', 'wb') as file:
 #     dill.dump(g, file)
-def greeting2():
-    return "YEEEEEEEEET!"
-# g = Greeting([greeting1, greeting2])
-with open('DELETE_TEST.pickle', 'rb') as file:
-    g = dill.load(file)
-print(type(g))
-g.greet()
-pprint(__main__)
+# def greeting2():
+#     return "YEEEEEEEEET!"
+# # g = Greeting([greeting1, greeting2])
+# with open('DELETE_TEST.pickle', 'rb') as file:
+#     g = dill.load(file)
+# print(type(g))
+# g.greet()
+# pprint(__main__)
+
