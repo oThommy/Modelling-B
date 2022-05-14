@@ -46,6 +46,3 @@ The interpreter is located at `C:\ProgramData\Anaconda3\envs\modelling-b-venv\py
 # Resources (bronnen)
 - https://pyvis.readthedocs.io/en/latest/documentation.html
 - https://medium.com/opex-analytics/optimization-modeling-in-python-pulp-gurobi-and-cplex-83a62129807a
-
-# Other
-- brightspace-locker is a container for all finalized files that are uploaded to the brightspace-locker
