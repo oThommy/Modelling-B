@@ -28,3 +28,4 @@
 - excel sheet for demo graph visualiser
 - gen documentation?
 - utils get_relpath() function for all to_json() methods and __str__() and __repr__ methods
+- NodeId = NewType('NodeId', int)
