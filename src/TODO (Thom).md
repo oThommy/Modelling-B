@@ -5,7 +5,7 @@
     - implement even faster get_z for a single hub
     - are constraints needed in get_z?
     - get_z_from_dict()?
-    - test ILP extensively
+    - test ILP extensively (see also numbers that are slightly off on the right on HUGE dataset)
     - remove @property?
     - non_hubs optional?
     - Ilp instead of ILP
@@ -18,8 +18,7 @@
     - retreive data
 - refactor repo
     - delete bs-locker, latex-overleaf, etc.
-- add performance packages to requirements.txt and environment.yml
-- implement second intuitive algorithm
+- add cprofile reader and displayer, dill packages to requirements.txt and environment.yml
 - remove pandera?
 - uitzoeken hoe je andere solvers kunt toevoegen aan requirements.txt en environment.yml
 - type hints 
@@ -27,5 +26,5 @@
 - make flow dictate node size
 - color for hub and color for non-hub
 - excel sheet for demo graph visualiser
-- Config().GRAPH_OPTIONS not working
 - gen documentation?
+- utils get_relpath() function for all to_json() methods and __str__() and __repr__ methods
