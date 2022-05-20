@@ -6,6 +6,11 @@ import utils
 
 @dataclass(frozen=True, slots=True)
 class Config(Singleton):
+    '''Contains all the configurations
+    
+    To get a config value, use Config().ATTRIBUTE_NAME.
+    '''
+
     # PATHS
     @property
     def ROOT_DIR_PATH(self) -> Path:
@@ -23,7 +28,7 @@ class Config(Singleton):
     def OTHER_GRAPHS_DIR_PATH(self) -> Path:
         '''directory for random graphs'''
 
-        return self.ROOT_DIR_PATH / r'other-graphs'
+        return self.OUT_DIR_PATH / r'other-graphs'
 
     @property
     def DATA_VERY_SMALL_PATH(self) -> Path:
@@ -31,12 +36,16 @@ class Config(Singleton):
 
     @property
     def DATA_SMALL_PATH(self) -> Path:
-        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 very small Small.xlsx'
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 Small.xlsx'
 
     @property
     def DATA_LARGE_PATH(self) -> Path:
-        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 very small Small.xlsx'
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 Large.xlsx'
 
+    @property
+    def DATA_MEDIUM_HUGE_PATH(self) -> Path:
+        return self.IN_DIR_PATH / r'Data assignment parcel transport 2 medium huge.xlsx'
+    
     @property
     def DATA_HUGE_PATH(self) -> Path:
         return self.IN_DIR_PATH / r'Data assignment parcel transport 2 huge.xlsx'
@@ -46,10 +55,15 @@ class Config(Singleton):
     PICKLE_PROTOCOL: int = 5
 
     # GRAPH VISUALISER
+    NETWORK_WIDTH: str = '100%'
+    NETWORK_HEIGHT: str = '100%'
+    NETWORK_BGCOLOR: str = '#222222'
+    NETWORK_FONT_COLOR: str = 'white'
     MIN_NODE_SIZE: int = 20
     MAX_NODE_SIZE: int = 55
     MIN_EDGE_WIDTH: int = 7
     MAX_EDGE_WIDTH: int = 25
+    DEFAULT_EDGE_WIDTH: int = 15
     GRAPH_OPTIONS: dict = utils.default_fact_field({
         'nodes': {
             'borderWidthSelected': 3,
@@ -113,3 +127,33 @@ class Config(Singleton):
         #     'solver': 'barnesHut'
         # }
     })
+
+    def to_dict(self) -> dict:
+        return {
+            'ROOT_DIR_PATH': self.ROOT_DIR_PATH,
+            'OUT_DIR_PATH': self.OUT_DIR_PATH,
+            'IN_DIR_PATH': self.IN_DIR_PATH,
+            'OTHER_GRAPHS_DIR_PATH': self.OTHER_GRAPHS_DIR_PATH,
+            'DATA_VERY_SMALL_PATH': self.DATA_VERY_SMALL_PATH,
+            'DATA_SMALL_PATH': self.DATA_SMALL_PATH,
+            'DATA_LARGE_PATH': self.DATA_LARGE_PATH,
+            'DATA_HUGE_PATH': self.DATA_HUGE_PATH,
+            'TQDM_NCOLS': self.TQDM_NCOLS,
+            'PICKLE_PROTOCOL': self.PICKLE_PROTOCOL,
+            'MIN_NODE_SIZE': self.MIN_NODE_SIZE,
+            'MAX_NODE_SIZE': self.MAX_NODE_SIZE,
+            'MIN_EDGE_WIDTH': self.MIN_EDGE_WIDTH,
+            'MAX_EDGE_WIDTH': self.MAX_EDGE_WIDTH,
+            'GRAPH_OPTIONS': self.GRAPH_OPTIONS,
+        }
+
+    def __repr__(self) -> str:
+        rep = f'''
+Config(
+    {str(self.to_dict())}
+)
+        '''
+        return rep
+
+    def __str__(self) -> str:
+        return repr(self)

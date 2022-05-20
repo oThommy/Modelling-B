@@ -1,8 +1,9 @@
 from dataclasses import field, Field
-from datetime import datetime
-import os
-from pathlib import Path
 from typing import Optional, TypeVar
+from datetime import datetime
+from pathlib import Path
+from tqdm import std
+import os
 
 
 T = TypeVar('T')
@@ -23,7 +24,31 @@ def get_formatted_date(sep: str = '-', date: Optional[datetime] = datetime.now()
 
     return date.strftime(sep.join(['%Y', '%m', '%d', '%H', '%M', '%S']))
 
-def default_fact_field(obj: T) -> Field:
+def default_fact_field(obj: T, *args, **kwargs) -> Field:
     '''returns dataclass field with as default_factory the passed obj'''
 
-    return field(default_factory=lambda: obj)
+    return field(*args, default_factory=lambda: obj, **kwargs)
+
+def to_int(n: str | float | int) -> int:
+    '''converts string, float or int to int'''
+
+    return int(float(n))
+
+def dict_dtypes_to_int(d: dict[T]) -> dict[T]:
+    '''returns dictionary with keys and values converted to integers'''
+
+    if isinstance(d, str | float | int):
+        return to_int(d)
+
+    ret_dict = dict()
+
+    for key, val in d.items():
+        ret_dict[to_int(key)] = dict_dtypes_to_int(val)
+    
+    return ret_dict
+
+def complete_pbar(pbar: std.tqdm) -> None:
+    '''set pbar to 100%'''
+
+    pbar.n = 99
+    pbar.update(1)

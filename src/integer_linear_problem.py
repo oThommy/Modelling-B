@@ -1,15 +1,18 @@
-from pathlib import Path
-from config import Config
-from custom_typing import NodeId, Series, DataFrame
 from typing_extensions import Self
+from custom_typing import NodeId
 from typing import Optional
+from config import Config
+from pathlib import Path
 import pandas as pd
-import numpy as np
-import json
-import os
+import utils
 
 
 class Ilp:
+    '''Ilp Dataset Manager
+    
+    inputfile_path must reside in in Config().IN_DIR_PATH.
+    '''
+
     __slots__ = '__N', '__collection', '__transfer', '__distribution', '__w', '__c', '__f', '__inputfile_basename'
 
     def __init__(
@@ -23,8 +26,6 @@ class Ilp:
         f: dict[NodeId, int],
         inputfile_path: Optional[Path | str] = None
     ) -> None:
-
-        '''Create Ilp dataset. inputfile_path must be in Config().IN_DIR_PATH'''
 
         self.__N = N
         self.__collection = collection
@@ -48,27 +49,32 @@ class Ilp:
             collection = gen_info_ser['collection ']
         except:
             collection = gen_info_ser['collection']
-        transfer = gen_info_ser['transfer']
-        distribution = gen_info_ser['distribution']
+        collection = utils.to_int(collection)
+        transfer = utils.to_int(gen_info_ser['transfer'])
+        distribution = utils.to_int(gen_info_ser['distribution'])
 
         # take transpose since vertical column is the origin and horizontal row the destination
         w_df = pd.read_excel(inputfile_path, sheet_name='w', index_col=0).T
         w_df = Ilp.df_drop_unnamed_cols(w_df)
-        w_df = w_df.to_dict()
+        w = w_df.to_dict()
+        w = utils.dict_dtypes_to_int(w)
 
         c_df = pd.read_excel(inputfile_path, sheet_name='c', index_col=0).T
         c_df = Ilp.df_drop_unnamed_cols(c_df)
-        c_df = c_df.to_dict()
+        c = c_df.to_dict()
+        c = utils.dict_dtypes_to_int(c)
 
         f_ser = pd.read_excel(inputfile_path, sheet_name='f', index_col=0, header=None).squeeze('columns')
-        N = set(f_ser.index)
-        f_ser = f_ser.to_dict()
+        N = set(f_ser.index.astype(int))
+        f = f_ser.to_dict()
+        f = utils.dict_dtypes_to_int(f)
 
-        return cls(N, collection, transfer, distribution, w_df, c_df, f_ser, inputfile_basename)
+        return cls(N, collection, transfer, distribution, w, c, f, inputfile_basename)
 
     @staticmethod
     def df_drop_unnamed_cols(df: pd.DataFrame) -> pd.DataFrame:
         """removes all columns that start with 'Unnamed:'"""
+
         return df[df.columns.drop(list(df.filter(regex=r'^Unnamed:')))]
 
     @property
@@ -147,19 +153,25 @@ class Ilp:
                         
         return z
 
+    def to_dict(self) -> dict:
+        return {
+            'N': self.N,
+            'collection': self.collection,
+            'transfer': self.transfer,
+            'distribution': self.distribution,
+            'w': self.w,
+            'c': self.c,
+            'f': self.f,
+            'inputfile_path': self.inputfile_path,
+            '__inputfile_basename': self.__inputfile_basename,
+        }
+
     def __repr__(self) -> str:
-        rep = f"""
+        rep = f'''
 Ilp(
-    inputfile_path: {self.inputfile_path}
-    N: {self.N}
-    collection: {self.collection}
-    transfer: {self.transfer}
-    distribution: {self.distribution}
-    w: {json.dumps(self.w, indent=4)}
-    c: {json.dumps(self.c, indent=4)}
-    f: {json.dumps(self.f, indent=4)}
+    {str(self.to_dict())}
 )
-        """
+        '''
         return rep
 
     def __str__(self) -> str:

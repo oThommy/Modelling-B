@@ -10,20 +10,33 @@ from pathlib import Path
 import dill
 
 
+class AlreadySavedError(Exception):
+     '''Raised when a Solution instance has already been saved'''
+     pass
+
 @dataclass(slots=True)
 class Solution:
+    '''
+    The Solution class acts as a manager for solutions, providing the option to print, visualise or save the solution in a structured manner.
+
+    WARNING: Using an unpickled Solution instance might result in unpredictable behaviour since the Solution class relies on the Config class, which may 
+    have changed after the original Solution instance has been pickled.
+    '''
+
     z: int
     hubs: set[NodeId]
     non_hubs: set[NodeId]
     E: dict[NodeId, dict[NodeId, bool]]
     ilp: Ilp
-    config_class: type[Config] = field(init=False, default=Config)
+    # configRepr: Config = field(init=False, default=str(Config()))
+    config_dict: dict = utils.default_fact_field(Config().to_dict(), init=False)
     __date: datetime = field(init=False, default=datetime.now())
     __id: int = field(init=False)
     __algo_basename: str = field(
         init=False, 
         default=Path(__main__.__file__).stem # returns script name that was invoked from the command line (instead of this module)
     )
+    __is_saved: bool = field(init=False, default=False)
 
     @property
     def __algo_dir_path(self) -> Path:
@@ -62,8 +75,12 @@ class Solution:
 
         visualise_graph(self.hubs, self.non_hubs, self.E, self.ilp, graph_path)
 
-    def save(self) -> None:
-        '''save solution for easy later lookup. a serialized version of this class' instance, a json variant, a plain text file variant and optionally a graph.html (if you run Solution.visualise()) will be stored in OUT_DIR_PATH/{solver filename}/{id-} (see config for OUT_DIR_PATH)'''
+    def save(self) -> Path:
+        '''save solution for easy later lookup. a serialized version of this class' instance, a plain text file variant and optionally a graph.html (if you run Solution.visualise()) will be stored in OUT_DIR_PATH/{solver filename}/{id-} (see config for OUT_DIR_PATH). The directory path containing the saved files is returned.'''
+
+        if (self.__is_saved):
+            raise AlreadySavedError('You cannot save a Solution instance that has already been saved.')
+        self.__is_saved = True
 
         utils.ensure_dir_exists(self.__save_dir_path)
 
@@ -75,15 +92,51 @@ class Solution:
         pickle_path = self.__save_dir_path / pickle_base
 
         with open(pickle_path, 'wb') as file:
-            # pickle.dump(self, file, Config().PICKLE_PROTOCOL)
-            dill.dump(self, file) # FIXME: protocol
+            dill.dump(self, file)
 
-    def print(self):
-        print(self.__algo_dir_path)
-        print(self.__save_dir_path)
-        print(self.__inputfile_basename)
+        if self.__inputfile_basename is None:
+            solution_repr_base = fr'solution_repr_{self.__id}_{utils.get_formatted_date("_", self.__date)}.txt'
+        else:
+            solution_repr_base = fr'solution_repr_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.txt'
 
+        solution_repr_path = self.__save_dir_path / solution_repr_base
 
-    """
-    config
-    """
+        with open(solution_repr_path, 'w') as file:
+            file.write(repr(self))
+
+        print('The solution is successfully saved.')
+
+        return self.__save_dir_path
+
+    def print(self) -> None:
+        print(f'===== Solution from {self.__algo_basename} =====')
+        print(f'z = {self.z}')
+        print(self)
+
+    def to_dict(self) -> dict:
+        return {
+            'z': self.z,
+            'hubs': self.hubs,
+            'non_hubs': self.non_hubs,
+            'E': self.E,
+            '__date': self.__date,
+            '__id': self.__id,
+            '__algo_basename': self.__algo_basename,
+            '__is_saved': self.__is_saved,
+            '__algo_dir_path': self.__algo_dir_path,
+            '__inputfile_basename': self.__inputfile_basename,
+            '__save_dir_path': self.__save_dir_path,
+            'ilp': self.ilp,
+            'config_dict': self.config_dict,
+        }
+
+    def __repr__(self) -> str:
+        rep = f'''
+Solution(
+    {str(self.to_dict())}
+)
+        '''
+        return rep
+
+    def __str__(self) -> str:
+        return repr(self)

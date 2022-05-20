@@ -1,11 +1,15 @@
 import inspect
 import __main__
+from io import StringIO
 from pathlib import Path
 from pprint import pprint
 import webbrowser
 from dataclasses import dataclass
 import os
 import __main__
+
+import jsonpickle
+from config import Config
 # from config import Config
 from integer_linear_problem import Ilp
 import utils
@@ -71,17 +75,18 @@ import dill
 # x = Path(inputfile_path).resolve().relative_to(Config().IN_DIR_PATH)
 # print(x)
 
-sol = Solution(
-    493893,
-    {1,2,3}, 
-    {4,5,6},
-    {1: {2: 1, 3: 0}},
-    Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx'))
-print(sol)
-print(sol.__module__)
-sol.save()
+# sol = Solution(
+#     493893,
+#     {1,2,3}, 
+#     {4,5,6},
+#     {1: {2: 1, 3: 0}},
+#     Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx'))
+# print(sol.configRepr)
+# print(sol.__module__)
+# print(repr(sol))
+# sol.save()
 
-sol.save()
+# sol.save()
 
 # yeetfile = r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\test\7-Data assignment parcel transport 2 Small-2022-05-13-21-32-31\solution_7_Data assignment parcel transport 2 Small_2022_05_13_21_32_31.pickle'
 # with open(yeetfile, 'rb') as file:
@@ -106,3 +111,11 @@ sol.save()
 # g.greet()
 # pprint(__main__)
 
+import sys
+# ilp = Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx')
+# print(ilp)
+
+ilp = Ilp.from_excel(Config().DATA_MEDIUM_HUGE_PATH)
+pprint(ilp.to_dict()['N'])
+pprint(ilp.to_dict()['f'])
+pprint(ilp.to_dict()['w'][71])
