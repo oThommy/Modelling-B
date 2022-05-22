@@ -1,5 +1,5 @@
 
-from typing import Protocol, TypeVar
+from typing import Protocol, TypeVar, TypedDict
 
 
 K = TypeVar('K')
@@ -13,6 +13,10 @@ class Series(Protocol[K, V]):
 
 class DataFrame(Protocol[K, V]):
     pass
+
+class IlpSolverData(TypedDict):
+    type: str
+    status: str
 
 class Singleton:
     __instance = None

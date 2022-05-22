@@ -11,6 +11,7 @@ class Ilp:
     '''Ilp Dataset Manager
     
     inputfile_path must reside in in Config().IN_DIR_PATH.
+    Ilp.w and Ilp.c both interpret the Excel column as the origin and the row as the destination.
     '''
 
     __slots__ = '__N', '__collection', '__transfer', '__distribution', '__w', '__c', '__f', '__inputfile_basename'

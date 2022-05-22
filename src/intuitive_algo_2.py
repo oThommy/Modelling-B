@@ -47,7 +47,7 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
     return solution
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_MEDIUM_HUGE_PATH)
+    ilp = Ilp.from_excel(Config().DATA_VERY_SMALL_PATH)
     intuitive_algo_2(ilp)
 
 

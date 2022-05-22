@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from custom_typing import NodeId
+import pandas as pd
+from typing import Optional
+from custom_typing import NodeId, IlpSolverData
 from integer_linear_problem import Ilp
 import __main__
 from config import Config
@@ -28,7 +30,7 @@ class Solution:
     non_hubs: set[NodeId]
     E: dict[NodeId, dict[NodeId, bool]]
     ilp: Ilp
-    # configRepr: Config = field(init=False, default=str(Config()))
+    ilp_solver_data: Optional[IlpSolverData] = None
     config_dict: dict = utils.default_fact_field(Config().to_dict(), init=False)
     __date: datetime = field(init=False, default=datetime.now())
     __id: int = field(init=False)
@@ -110,7 +112,19 @@ class Solution:
 
     def print(self) -> None:
         print(f'===== Solution from {self.__algo_basename} =====')
+
+        if self.ilp_solver_data is not None:
+            print(f'ILP Solver Type: {self.ilp_solver_data["type"]}')
+            print(f'ILP Solver Status: {self.ilp_solver_data["status"]}')
+
         print(f'z = {self.z}')
+        print(f'hubs = {self.hubs}')
+        print(f'non-hubs = {self.non_hubs}')
+
+        E_df = pd.DataFrame.from_dict(self.E).T # display it as the column being the origin and row the destination
+        print(f'E = ')
+        print(E_df)
+
         print(self)
 
     def to_dict(self) -> dict:
