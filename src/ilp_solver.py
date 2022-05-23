@@ -5,7 +5,7 @@ import pulp as plp
 
 
 def ilp_solver_pulp(ilp: Ilp) -> Solution:
-    '''ILP Solver'''
+    '''PulP ILP Solver'''
 
     # create parcel delivery model object
     ParDe: plp.LpProblem = plp.LpProblem('Parcel Delivery', sense=plp.LpMinimize)
@@ -19,10 +19,12 @@ def ilp_solver_pulp(ilp: Ilp) -> Solution:
 
     # add objective z function
     ParDe += plp.lpSum([ilp.f[i] * H[i] for i in ilp.N]) + \
-    plp.lpSum([t1[i][j] * ilp.w[i][j] * ilp.transfer * ilp.c[i][j] for i in ilp.N for j in ilp.N]) + \
+    plp.lpSum([t1[i][j] * ilp.w[i][j] * ilp.transfer * ilp.c[i][j] \
+        for i in ilp.N for j in ilp.N]) + \
     plp.lpSum([t2[i][j][k] * (ilp.w[i][j] * (ilp.collection * ilp.c[i][k] + ilp.transfer * ilp.c[k][j]) + ilp.w[j][i] * (ilp.transfer * ilp.c[j][k] + ilp.distribution * ilp.c[k][i])) \
-    for i in ilp.N for j in ilp.N for k in ilp.N]) + \
-    plp.lpSum([t3[i][j][k][l] * ilp.w[i][j] * (ilp.collection * ilp.c[i][k] + ilp.transfer * ilp.c[k][l] + ilp.distribution * ilp.c[l][j]) for i in ilp.N for j in ilp.N for k in ilp.N for l in ilp.N])
+        for i in ilp.N for j in ilp.N for k in ilp.N]) + \
+    plp.lpSum([t3[i][j][k][l] * ilp.w[i][j] * (ilp.collection * ilp.c[i][k] + ilp.transfer * ilp.c[k][l] + ilp.distribution * ilp.c[l][j]) \
+        for i in ilp.N for j in ilp.N for k in ilp.N for l in ilp.N])
 
     # add constraints
     ParDe += plp.lpSum([H[i] for i in ilp.N]) >= 1
