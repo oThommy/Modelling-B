@@ -115,7 +115,8 @@ import sys
 # ilp = Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx')
 # print(ilp)
 
-ilp = Ilp.from_excel(Config().DATA_MEDIUM_HUGE_PATH)
-pprint(ilp.to_dict()['N'])
-pprint(ilp.to_dict()['f'])
-pprint(ilp.to_dict()['w'][71])
+# ilp = Ilp.from_excel(Config().DATA_MEDIUM_HUGE_PATH)
+# pprint(ilp.to_dict()['N'])
+# pprint(ilp.to_dict()['f'])
+# pprint(ilp.to_dict()['w'][71])
+
