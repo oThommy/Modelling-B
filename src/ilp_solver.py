@@ -2,10 +2,14 @@ from integer_linear_problem import Ilp
 from solution import Solution
 from config import Config
 import pulp as plp
+import utils
 
 
 def ilp_solver_pulp(ilp: Ilp) -> Solution:
     '''PulP ILP Solver'''
+
+    timer = utils.Timer()
+    timer.start()
 
     # create parcel delivery model object
     ParDe: plp.LpProblem = plp.LpProblem('Parcel Delivery', sense=plp.LpMinimize)
@@ -84,7 +88,9 @@ def ilp_solver_pulp(ilp: Ilp) -> Solution:
         'status': plp.LpStatus[ParDe.status]
     }
 
-    solution = Solution(z, hubs, non_hubs, E, ilp, ilp_solver_data)
+    timer.stop()
+
+    solution = Solution(z, hubs, non_hubs, E, ilp, timer, ilp_solver_data)
     solution.print()
     solution.visualise()
     solution.save()

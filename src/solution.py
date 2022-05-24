@@ -1,14 +1,14 @@
-from dataclasses import dataclass, field
-from datetime import datetime
-import pandas as pd
-from typing import Optional
 from custom_typing import NodeId, IlpSolverData
-from integer_linear_problem import Ilp
-import __main__
-from config import Config
-import utils
 from graph_visualiser import visualise_graph
+from dataclasses import dataclass, field
+from integer_linear_problem import Ilp
+from datetime import datetime
+from typing import Optional
+from config import Config
 from pathlib import Path
+import pandas as pd
+import __main__
+import utils
 import dill
 
 
@@ -30,6 +30,7 @@ class Solution:
     non_hubs: set[NodeId]
     E: dict[NodeId, dict[NodeId, bool]]
     ilp: Ilp
+    timer: Optional[utils.Timer] = None
     ilp_solver_data: Optional[IlpSolverData] = None
     config_dict: dict = utils.default_fact_field(Config().to_dict(), init=False)
     __date: datetime = field(init=False, default=datetime.now())
@@ -113,6 +114,9 @@ class Solution:
     def print(self) -> None:
         print(f'===== Solution from {self.__algo_basename} =====')
 
+        if self.timer is not None:
+            print(f'Total time: {self.timer.total_time}')
+
         if self.ilp_solver_data is not None:
             print(f'ILP Solver Type: {self.ilp_solver_data["type"]}')
             print(f'ILP Solver Status: {self.ilp_solver_data["status"]}')
@@ -128,7 +132,7 @@ class Solution:
         print(self)
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             'z': self.z,
             'hubs': self.hubs,
             'non_hubs': self.non_hubs,
@@ -143,6 +147,14 @@ class Solution:
             'ilp': self.ilp,
             'config_dict': self.config_dict,
         }
+
+        if self.timer is not None:
+            d['timer'] = self.timer
+
+        if self.ilp_solver_data is not None:
+            d['ilp_solver_data'] = self.ilp_solver_data 
+
+        return d
 
     def __repr__(self) -> str:
         rep = f'''

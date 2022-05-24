@@ -9,6 +9,9 @@ import utils
 def intuitive_algo_2(ilp: Ilp) -> Solution:
     '''intuitive algorithm 2'''
 
+    timer = utils.Timer()
+    timer.start()
+
     z_min = float('inf')
     min_hubs = set()
     remaining_hubs = ilp.N.copy()
@@ -27,7 +30,7 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
             min_hub = min(hub_costs, key=hub_costs.get)
             current_z = hub_costs[min_hub]
 
-            if current_z >= z_min:
+            if current_z > z_min:
                 utils.complete_pbar(pbar)
                 break
                 
@@ -37,9 +40,11 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
             pbar.update(1)
 
     non_hubs = ilp.N - min_hubs
-
     E = algo_funcs.get_E(min_hubs, non_hubs, ilp.N, ilp.c)
-    solution = Solution(z_min, min_hubs, non_hubs, E, ilp)
+
+    timer.stop()
+
+    solution = Solution(z_min, min_hubs, non_hubs, E, ilp, timer)
     solution.print()
     solution.visualise()
     solution.save()
@@ -47,7 +52,7 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
     return solution
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
+    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
     intuitive_algo_2(ilp)
 
 

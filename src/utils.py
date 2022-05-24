@@ -1,8 +1,9 @@
-from dataclasses import field, Field
+from dataclasses import dataclass, field, Field
 from typing import Optional, TypeVar
-from datetime import datetime
 from pathlib import Path
 from tqdm import std
+import datetime
+import time
 import os
 
 
@@ -19,7 +20,7 @@ def count_dirs(dir_path: Path) -> int:
 
     return len(next(os.walk(dir_path))[1])
 
-def get_formatted_date(sep: str = '-', date: Optional[datetime] = datetime.now()) -> str:
+def get_formatted_date(sep: str = '-', date: Optional[datetime.datetime] = datetime.datetime.now()) -> str:
     '''returns date string formatted with given seperator'''
 
     return date.strftime(sep.join(['%Y', '%m', '%d', '%H', '%M', '%S']))
@@ -52,3 +53,28 @@ def complete_pbar(pbar: std.tqdm) -> None:
 
     pbar.n = 99
     pbar.update(1)
+
+@dataclass(init=False, slots=True)
+class Timer:
+    '''stores execution time'''
+
+    __start_time: float
+    __end_time: float
+
+    @property
+    def total_time(self) -> str:
+        seconds = self.__end_time - self.__start_time
+        return str(datetime.timedelta(seconds=seconds))
+
+    def start(self) -> None:
+        '''start timer'''
+        
+        self.__start_time = time.perf_counter()
+
+    def stop(self) -> None:
+        '''stop timer'''
+
+        self.__end_time = time.perf_counter()
+
+    def __repr__(self) -> None:
+        return f'Timer(total_time={self.total_time})'

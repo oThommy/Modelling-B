@@ -1,3 +1,4 @@
+from email import utils
 from integer_linear_problem import Ilp
 from solution import Solution
 from config import Config
@@ -14,6 +15,9 @@ def powerset(s: set) -> set:
 
 def intuitive_algo_1(ilp: Ilp) -> Solution:
     '''Intuitive algorithm 1'''
+
+    timer = utils.Timer()
+    timer.start()
 
     z_min = float('inf')
 
@@ -35,12 +39,15 @@ def intuitive_algo_1(ilp: Ilp) -> Solution:
             non_hubs_min = copy.deepcopy(non_hubs)
             E_min = copy.deepcopy(E)
 
+    timer.stop()
+
     solution = Solution(
         z=z_min,
         hubs=hubs_min,
         non_hubs=non_hubs_min,
         E=E_min,
         ilp=ilp,
+        timer=timer
     )
     solution.print()
     solution.visualise()
