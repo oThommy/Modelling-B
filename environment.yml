@@ -10,7 +10,7 @@ dependencies:
   - PuLP
   - docplex
   - pandas
-  - pandera
+  - dill
   - numpy
   - openpyxl
   - jupyter

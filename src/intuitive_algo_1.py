@@ -1,11 +1,10 @@
-from email import utils
 from integer_linear_problem import Ilp
 from solution import Solution
 from config import Config
 from tqdm import tqdm
 import algo_funcs
+import utils
 import copy
-
 
 def powerset(s: set) -> set:
     bitmasks = [1 << i for i in range(len(s))] # 1 << i is basically equal to 2^i
@@ -56,7 +55,7 @@ def intuitive_algo_1(ilp: Ilp) -> Solution:
     return solution
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
+    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
     intuitive_algo_1(ilp)
 
 

@@ -36,6 +36,7 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
                 
             z_min = current_z
             min_hubs.add(min_hub)
+            remaining_hubs.remove(min_hub)
 
             pbar.update(1)
 

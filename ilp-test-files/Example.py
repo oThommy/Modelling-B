@@ -31,7 +31,8 @@ for j in range(cities):
     Powerco += lpSum([x[i][j] for i in range(plants)])==demand[j]
  
 #solve problem    
-Powerco.solve(GUROBI_CMD())
+# Powerco.solve(GUROBI_CMD())
+Powerco.solve(CPLEX_CMD())
 # Powerco.solve()
     
 #print status

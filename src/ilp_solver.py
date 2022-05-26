@@ -1,12 +1,14 @@
+from custom_typing import IlpSolverData
 from integer_linear_problem import Ilp
 from solution import Solution
+from typing import Optional
 from config import Config
 import pulp as plp
 import utils
 
 
-def ilp_solver_pulp(ilp: Ilp) -> Solution:
-    '''PulP ILP Solver'''
+def ilp_solver(ilp: Ilp, solver: Optional[plp.LpSolver_CMD] = None, ilp_solver_type: Optional[str] = None) -> Solution:
+    '''General ILP Solver'''
 
     timer = utils.Timer()
     timer.start()
@@ -34,7 +36,7 @@ def ilp_solver_pulp(ilp: Ilp) -> Solution:
     ParDe += plp.lpSum([H[i] for i in ilp.N]) >= 1
 
     for i in ilp.N:
-        ParDe += E[i][i]==H[i]
+        ParDe += E[i][i] == H[i]
 
     for i in ilp.N:
         for j in ilp.N:
@@ -74,9 +76,10 @@ def ilp_solver_pulp(ilp: Ilp) -> Solution:
             ParDe += E[i][j] == E[j][i]
 
     # solve problem    
-    # FIXME:
-    # ParDe.solve(plp.GUROBI_CMD())
-    ParDe.solve()
+    if solver is None:
+        ParDe.solve()
+    else:
+        ParDe.solve(solver)
 
     E = {i: {j: int(plp.value(E[i][j])) for j in ilp.N} for i in ilp.N}
     H = {i: int(plp.value(H[i])) for i in ilp.N}
@@ -84,7 +87,7 @@ def ilp_solver_pulp(ilp: Ilp) -> Solution:
     hubs = {hub for hub, is_hub in H.items() if is_hub}
     non_hubs = ilp.N - hubs
     ilp_solver_data = {
-        'type': 'PulP',
+        'type': ilp_solver_type or 'UNKNOWN',
         'status': plp.LpStatus[ParDe.status]
     }
 
@@ -97,12 +100,26 @@ def ilp_solver_pulp(ilp: Ilp) -> Solution:
 
     return solution
 
-def ilp_solver_gurobi(ilp: Ilp) -> Solution: ...
-def ilp_solver_cplex(ilp: Ilp) -> Solution: ...
+def ilp_solver_pulp(ilp: Ilp) -> Solution:
+    '''PuLP ILP Solver'''
+
+    return ilp_solver(ilp, None, 'PuLP')
+
+def ilp_solver_gurobi(ilp: Ilp) -> Solution:
+    '''Gurobi ILP Solver'''
+    
+    return ilp_solver(ilp, plp.GUROBI_CMD(), 'Gurobi')
+
+def ilp_solver_cplex(ilp: Ilp) -> Solution:
+    '''Cplex ILP Solver'''
+
+    return ilp_solver(ilp, plp.CPLEX_CMD(), 'Cplex')
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_VERY_SMALL_PATH)
-    ilp_solver_pulp(ilp)
+    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
+    # ilp_solver_pulp(ilp)
+    # ilp_solver_gurobi(ilp)
+    ilp_solver_cplex(ilp)
 
 
 if __name__ == '__main__':

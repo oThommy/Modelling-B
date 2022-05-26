@@ -120,12 +120,13 @@ import sys
 # pprint(ilp.to_dict()['f'])
 # pprint(ilp.to_dict()['w'][71])
 
-import time
-import datetime
-timer = utils.Timer()
-timer.start()
-time.sleep(2.45)
-timer.stop()
-print(timer.total_time)
+# import time
+# import datetime
+# timer = utils.Timer()
+# timer.start()
+# time.sleep(2.45)
+# timer.stop()
+# print(timer.total_time)
 
-print(str(datetime.timedelta(seconds=3600 * 24 * 100 + 3600.34543985723952379)))
+# print(str(datetime.timedelta(seconds=3600 * 24 * 100 + 3600.34543985723952379)))
+print(5 or 'unkown')

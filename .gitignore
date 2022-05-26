@@ -1,4 +1,8 @@
 # Custom
+# Cplex log
+cplex.log
+clone[0-9]*.log
+
 # don't share settings (such as linting) yet and just configure settings on a user level
 .vscode/
 
