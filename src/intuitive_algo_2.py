@@ -45,7 +45,7 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
 
     timer.stop()
 
-    solution = Solution(z_min, min_hubs, non_hubs, E, ilp, timer)
+    solution = Solution(z_min, min_hubs, non_hubs, E, ilp, __file__, timer)
     solution.print()
     solution.visualise()
     solution.save()

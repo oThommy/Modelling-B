@@ -15,7 +15,7 @@ from integer_linear_problem import Ilp
 import utils
 from datetime import datetime
 from solution import Solution
-from time import time
+from time import sleep, time
 import pickle
 import dill
 
@@ -129,4 +129,7 @@ import sys
 # print(timer.total_time)
 
 # print(str(datetime.timedelta(seconds=3600 * 24 * 100 + 3600.34543985723952379)))
-print(5 or 'unkown')
+# print(5 or 'unkown')
+# print(next(next(os.walk(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\old-graphs'))))
+# print(Path(__file__).stem)
+

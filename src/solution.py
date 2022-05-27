@@ -30,15 +30,13 @@ class Solution:
     non_hubs: set[NodeId]
     E: dict[NodeId, dict[NodeId, bool]]
     ilp: Ilp
+    algo_file: str
     timer: Optional[utils.Timer] = None
     ilp_solver_data: Optional[IlpSolverData] = None
     config_dict: dict = utils.default_fact_field(Config().to_dict(), init=False)
+    __algo_basename: str = field(init=False)
     __date: datetime = field(init=False, default=datetime.now())
     __id: int = field(init=False)
-    __algo_basename: str = field(
-        init=False, 
-        default=Path(__main__.__file__).stem # returns script name that was invoked from the command line (instead of this module)
-    )
     __is_saved: bool = field(init=False, default=False)
 
     @property
@@ -59,6 +57,8 @@ class Solution:
         return self.__algo_dir_path / save_dir_name
 
     def __post_init__(self) -> None:
+        self.__algo_basename = Path(self.algo_file).stem
+
         if self.__algo_dir_path.exists():
             self.__id = utils.count_dirs(self.__algo_dir_path) + 1
         else:

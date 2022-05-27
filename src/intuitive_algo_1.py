@@ -46,7 +46,8 @@ def intuitive_algo_1(ilp: Ilp) -> Solution:
         non_hubs=non_hubs_min,
         E=E_min,
         ilp=ilp,
-        timer=timer
+        algo_file=__file__,
+        timer=timer,
     )
     solution.print()
     solution.visualise()
@@ -55,7 +56,7 @@ def intuitive_algo_1(ilp: Ilp) -> Solution:
     return solution
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
+    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
     intuitive_algo_1(ilp)
 
 

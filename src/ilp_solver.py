@@ -93,7 +93,7 @@ def ilp_solver(ilp: Ilp, solver: Optional[plp.LpSolver_CMD] = None, ilp_solver_t
 
     timer.stop()
 
-    solution = Solution(z, hubs, non_hubs, E, ilp, timer, ilp_solver_data)
+    solution = Solution(z, hubs, non_hubs, E, ilp, __file__, timer, ilp_solver_data)
     solution.print()
     solution.visualise()
     solution.save()
@@ -111,15 +111,15 @@ def ilp_solver_gurobi(ilp: Ilp) -> Solution:
     return ilp_solver(ilp, plp.GUROBI_CMD(), 'Gurobi')
 
 def ilp_solver_cplex(ilp: Ilp) -> Solution:
-    '''Cplex ILP Solver'''
+    '''CPLEX ILP Solver'''
 
-    return ilp_solver(ilp, plp.CPLEX_CMD(), 'Cplex')
+    return ilp_solver(ilp, plp.CPLEX_CMD(), 'CPLEX')
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
-    # ilp_solver_pulp(ilp)
+    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
+    ilp_solver_pulp(ilp)
     # ilp_solver_gurobi(ilp)
-    ilp_solver_cplex(ilp)
+    # ilp_solver_cplex(ilp)
 
 
 if __name__ == '__main__':

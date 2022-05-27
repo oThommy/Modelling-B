@@ -20,6 +20,11 @@ def count_dirs(dir_path: Path) -> int:
 
     return len(next(os.walk(dir_path))[1])
 
+def count_files(dir_path: Path) -> int:
+    '''returns amount of files in dir_path (non-recursive)'''
+
+    return len(next(os.walk(dir_path))[2])
+
 def get_formatted_date(sep: str = '-', date: Optional[datetime.datetime] = datetime.datetime.now()) -> str:
     '''returns date string formatted with given seperator'''
 

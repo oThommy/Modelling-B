@@ -48,7 +48,7 @@ def visualise_graph(
     '''
     
     if filepath is None:
-        id = utils.count_dirs(Config().OTHER_GRAPHS_DIR_PATH) + 1
+        id = utils.count_files(Config().OTHER_GRAPHS_DIR_PATH) + 1
         graph_base = fr'graph_{id}.html'
         graph_path = Config().OTHER_GRAPHS_DIR_PATH / graph_base
     else:
