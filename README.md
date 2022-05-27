@@ -46,3 +46,7 @@ The interpreter is located at `C:\ProgramData\Anaconda3\envs\modelling-b-venv\py
 # Resources (bronnen)
 - https://pyvis.readthedocs.io/en/latest/documentation.html
 - https://medium.com/opex-analytics/optimization-modeling-in-python-pulp-gurobi-and-cplex-83a62129807a
+- https://github.com/IBMPredictiveAnalytics/Simple_Linear_Programming_with_CPLEX/blob/master/source/main.py
+- https://www.pythonpool.com/cplex-python/
+- https://colab.research.google.com/github/Gurobi/modeling-examples/blob/master/intro_to_modeling/introduction_to_modeling_gcl.ipynb#scrollTo=mR1uBPyzgT9S
+- https://www.gurobi.com/documentation/9.5/examples/diet_py.html
