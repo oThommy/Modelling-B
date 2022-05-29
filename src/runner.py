@@ -6,7 +6,7 @@ from config import Config
 
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
+    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
 
     ilp_solver_pulp(ilp)
     # ilp_solver_gurobi(ilp)

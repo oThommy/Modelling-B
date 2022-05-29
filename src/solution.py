@@ -107,7 +107,7 @@ class Solution:
         with open(solution_repr_path, 'w') as file:
             file.write(repr(self))
 
-        print('The solution is successfully saved.')
+        print(f'The solution is successfully saved to {self.__save_dir_path}.')
 
         return self.__save_dir_path
 
