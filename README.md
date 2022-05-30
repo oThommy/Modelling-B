@@ -1,5 +1,6 @@
 ![python-version](https://img.shields.io/badge/python-v3.10-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
+[![download](https://img.shields.io/badge/download-.zip-brightgreen)](https://github.com/oThommy/Modelling-B/archive/refs/heads/main.zip)
 
 ### Overleaf
 https://www.overleaf.com/7557863444ptzfkkrvdqjk
