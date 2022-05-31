@@ -6,15 +6,15 @@ from config import Config
 
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
+    ilp = Ilp.from_excel(r'src\in\Data assignment parcel transport 2 TEST.xlsx')
 
-    ilp_solver_pulp(ilp)
-    # ilp_solver_gurobi(ilp)
+    # ilp_solver_pulp(ilp)
+    ilp_solver_gurobi(ilp)
     # ilp_solver_cplex(ilp)
 
     # intuitive_algo_1(ilp)
 
-    # intuitive_algo_2(ilp)
+    intuitive_algo_2(ilp)
 
 
 if __name__ == '__main__':

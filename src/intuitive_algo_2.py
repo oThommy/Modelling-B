@@ -6,7 +6,7 @@ import algo_funcs
 import utils
 
 
-def intuitive_algo_2(ilp: Ilp) -> Solution:
+def intuitive_algo_2(ilp: Ilp, save_sol: bool = True) -> Solution:
     '''intuitive algorithm 2'''
 
     timer = utils.Timer()
@@ -47,8 +47,10 @@ def intuitive_algo_2(ilp: Ilp) -> Solution:
 
     solution = Solution(z_min, min_hubs, non_hubs, E, ilp, __file__, timer)
     solution.print()
-    solution.visualise()
-    solution.save()
+
+    if save_sol:
+        solution.visualise()
+        solution.save()
 
     return solution
 

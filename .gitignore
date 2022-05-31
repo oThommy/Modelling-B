@@ -3,6 +3,9 @@
 cplex.log
 clone[0-9]*.log
 
+# Gurobi log
+gurobi.log
+
 # don't share settings (such as linting) yet and just configure settings on a user level
 .vscode/
 

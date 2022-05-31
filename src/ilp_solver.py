@@ -7,7 +7,13 @@ import pulp as plp
 import utils
 
 
-def ilp_solver(ilp: Ilp, solver: Optional[plp.LpSolver_CMD] = None, ilp_solver_type: Optional[str] = None) -> Solution:
+def ilp_solver(
+    ilp: Ilp, 
+    solver: Optional[plp.LpSolver_CMD] = None,
+    ilp_solver_type: Optional[str] = None,
+    save_sol: bool = True,
+) -> Solution:
+
     '''General ILP Solver'''
 
     timer = utils.Timer()
@@ -95,25 +101,27 @@ def ilp_solver(ilp: Ilp, solver: Optional[plp.LpSolver_CMD] = None, ilp_solver_t
 
     solution = Solution(z, hubs, non_hubs, E, ilp, __file__, timer, ilp_solver_data)
     solution.print()
-    solution.visualise()
-    solution.save()
+
+    if save_sol:
+        solution.visualise()
+        solution.save()
 
     return solution
 
-def ilp_solver_pulp(ilp: Ilp) -> Solution:
+def ilp_solver_pulp(ilp: Ilp, save_sol: bool = True) -> Solution:
     '''PuLP ILP Solver'''
 
-    return ilp_solver(ilp, None, 'PuLP')
+    return ilp_solver(ilp, None, 'PuLP', save_sol)
 
-def ilp_solver_gurobi(ilp: Ilp) -> Solution:
+def ilp_solver_gurobi(ilp: Ilp, save_sol: bool = True) -> Solution:
     '''Gurobi ILP Solver'''
     
-    return ilp_solver(ilp, plp.GUROBI_CMD(), 'Gurobi')
+    return ilp_solver(ilp, plp.GUROBI_CMD(), 'Gurobi', save_sol)
 
-def ilp_solver_cplex(ilp: Ilp) -> Solution:
+def ilp_solver_cplex(ilp: Ilp, save_sol: bool = True) -> Solution:
     '''CPLEX ILP Solver'''
 
-    return ilp_solver(ilp, plp.CPLEX_CMD(), 'CPLEX')
+    return ilp_solver(ilp, plp.CPLEX_CMD(), 'CPLEX', save_sol)
 
 def main() -> None:
     ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)

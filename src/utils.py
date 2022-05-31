@@ -71,6 +71,14 @@ class Timer:
         seconds = self.__end_time - self.__start_time
         return str(datetime.timedelta(seconds=seconds))
 
+    @property
+    def start_time(self) -> float:
+        return self.__start_time
+    
+    @property
+    def end_time(self) -> float:
+        return self.__end_time
+
     def start(self) -> None:
         '''start timer'''
         

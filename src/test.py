@@ -1,3 +1,6 @@
+import sys
+import pandas as pd
+import numpy as np
 import inspect
 import __main__
 from io import StringIO
@@ -111,7 +114,7 @@ import dill
 # g.greet()
 # pprint(__main__)
 
-import sys
+
 # ilp = Ilp.from_excel(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\in\Data assignment parcel transport 2 Small.xlsx')
 # print(ilp)
 
@@ -132,4 +135,18 @@ import sys
 # print(5 or 'unkown')
 # print(next(next(os.walk(r'C:\Users\Thom van den Hil\Desktop\Modelling-B\src\out\old-graphs'))))
 # print(Path(__file__).stem)
+# min_dataset_n = 10
+# max_dataset_n = 11
+# error_df = pd.DataFrame(
+#     [[-0.829776, 0.0],
+#     [-5, -2]], 
+#     index=range(min_dataset_n, max_dataset_n + 1),
+# )
+# print(error_df)
+# print(error_df.stack().describe())
 
+# avg_error_ser = pd.Series(np.zeros((max_dataset_n - min_dataset_n + 1,)), index=range(min_dataset_n, max_dataset_n + 1))
+# for index, row in error_df.iterrows():
+#     avg_error_ser[index] = row.mean()
+# print(avg_error_ser)
+# print(avg_error_ser.describe())

@@ -12,7 +12,7 @@ def powerset(s: set) -> set:
     for bit_selection in range(1, 1 << len(s)): # start with 1 to prevent empty set
         yield {el for el, bitmask in zip(s, bitmasks) if bit_selection & bitmask}
 
-def intuitive_algo_1(ilp: Ilp) -> Solution:
+def intuitive_algo_1(ilp: Ilp, save_sol: bool = True) -> Solution:
     '''Intuitive algorithm 1'''
 
     timer = utils.Timer()
@@ -50,8 +50,10 @@ def intuitive_algo_1(ilp: Ilp) -> Solution:
         timer=timer,
     )
     solution.print()
-    solution.visualise()
-    solution.save()
+
+    if save_sol:
+        solution.visualise()
+        solution.save()
 
     return solution
 

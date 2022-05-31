@@ -51,3 +51,7 @@ The interpreter is located at `C:\ProgramData\Anaconda3\envs\modelling-b-venv\py
 - https://www.pythonpool.com/cplex-python/
 - https://colab.research.google.com/github/Gurobi/modeling-examples/blob/master/intro_to_modeling/introduction_to_modeling_gcl.ipynb#scrollTo=mR1uBPyzgT9S
 - https://www.gurobi.com/documentation/9.5/examples/diet_py.html
+
+# Ideas
+- Intuïtieve algoritmes sneller maken door sneller hubs te kiezen (max 20% increase voor greedy heuristic algorithm) met nieuwe heuristic: een hub die geen verbinding heeft met non-hubs is duur omdat die bouwkosten heeft. De voordelen van isolated hubs zijn echter wel dat de kosten naar zichzelf 0 zijn en de transfer multiplier is 1 (< 2,3), waardoor pakketjes goedkoper getransporteerd kunnen worden. Dit vormt naar waarschijnlijkheid geen groot genoeg voordeel tov de dure bouwkosten en dus kunnen graphs met isolated hubs weggefilterd worden. Nadeel: theoretisch gezien kan een isolated hub interessant zijn, maarja drm is het ook een heuristic.
+- Computer specs erin zetten / runtime omzetten naar cpu seconds runtime

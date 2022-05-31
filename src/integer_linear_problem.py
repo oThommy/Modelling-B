@@ -110,6 +110,18 @@ class Ilp:
     def inputfile_path(self) -> Optional[Path]:
         return Config().IN_DIR_PATH / self.__inputfile_basename if self.__inputfile_basename is not None else None
     
+    @property
+    def w_df(self) -> pd.DataFrame:
+        return pd.DataFrame.from_dict(self.w)
+
+    @property
+    def c_df(self) -> pd.DataFrame:
+        return pd.DataFrame.from_dict(self.c)
+
+    @property
+    def f_ser(self) -> pd.Series:
+        return pd.Series(self.f)
+
     def get_z_single_hub(self, hub: NodeId, non_hubs: set[NodeId]) -> int:
         '''returns the value of the function that should be minimized for a single hub'''
 

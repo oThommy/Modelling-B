@@ -14,5 +14,7 @@ dependencies:
   - numpy
   - openpyxl
   - jupyter
+  - ipympl
   - matplotlib
   - matplotlib-inline
+  - scipy
