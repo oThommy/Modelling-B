@@ -18,3 +18,4 @@ dependencies:
   - matplotlib
   - matplotlib-inline
   - scipy
+  - typing_extensions
