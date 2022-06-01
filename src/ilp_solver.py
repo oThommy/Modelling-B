@@ -1,4 +1,4 @@
-from custom_typing import IlpSolverData
+from custom_typing import IlpSolverData, version, Version
 from integer_linear_problem import Ilp
 from solution import Solution
 from typing import Optional
@@ -7,14 +7,19 @@ import pulp as plp
 import utils
 
 
-def ilp_solver(
+# TODO: add FLAGS
+# TODO: refactor all to e.g. ilp_solver.gurobi_v1
+
+@version('1.0')
+def ilp_solver_v1(
+    __version__: Version,
     ilp: Ilp, 
     solver: Optional[plp.LpSolver_CMD] = None,
     ilp_solver_type: Optional[str] = None,
     save_sol: bool = True,
 ) -> Solution:
 
-    '''General ILP Solver'''
+    '''General ILP Solver v1'''
 
     timer = utils.Timer()
     timer.start()
@@ -94,7 +99,8 @@ def ilp_solver(
     non_hubs = ilp.N - hubs
     ilp_solver_data = {
         'type': ilp_solver_type or 'UNKNOWN',
-        'status': plp.LpStatus[ParDe.status]
+        'status': plp.LpStatus[ParDe.status],
+        'version': __version__,
     }
 
     timer.stop()
@@ -108,26 +114,53 @@ def ilp_solver(
 
     return solution
 
-def ilp_solver_pulp(ilp: Ilp, save_sol: bool = True) -> Solution:
-    '''PuLP ILP Solver'''
+@version('2.0')
+def ilp_solver_v2(
+    ilp: Ilp, 
+    solver: Optional[plp.LpSolver_CMD] = None,
+    ilp_solver_type: Optional[str] = None,
+    save_sol: bool = True,
+) -> Solution:
 
-    return ilp_solver(ilp, None, 'PuLP', save_sol)
+    '''General ILP Solver v2'''
 
-def ilp_solver_gurobi(ilp: Ilp, save_sol: bool = True) -> Solution:
-    '''Gurobi ILP Solver'''
+    ...
+
+def pulp_v1(ilp: Ilp, save_sol: bool = True) -> Solution:
+    '''PuLP ILP Solver v1'''
+
+    return ilp_solver_v1(ilp, None, 'PuLP', save_sol)
+
+def gurobi_v1(ilp: Ilp, save_sol: bool = True) -> Solution:
+    '''Gurobi ILP Solver v1'''
     
-    return ilp_solver(ilp, plp.GUROBI_CMD(), 'Gurobi', save_sol)
+    return ilp_solver_v1(ilp, plp.GUROBI_CMD(), 'Gurobi', save_sol)
 
-def ilp_solver_cplex(ilp: Ilp, save_sol: bool = True) -> Solution:
-    '''CPLEX ILP Solver'''
+def cplex_v1(ilp: Ilp, save_sol: bool = True) -> Solution:
+    '''CPLEX ILP Solver v1'''
 
-    return ilp_solver(ilp, plp.CPLEX_CMD(), 'CPLEX', save_sol)
+    return ilp_solver_v1(ilp, plp.CPLEX_CMD(), 'CPLEX', save_sol)
+
+def pulp_v2(ilp: Ilp, save_sol: bool = True) -> Solution:
+    '''PuLP ILP Solver v2'''
+
+    return ilp_solver_v2(ilp, None, 'PuLP', save_sol)
+
+def gurobi_v2(ilp: Ilp, save_sol: bool = True) -> Solution:
+    '''Gurobi ILP Solver v2'''
+    
+    return ilp_solver_v2(ilp, plp.GUROBI_CMD(), 'Gurobi', save_sol)
+
+def cplex_v2(ilp: Ilp, save_sol: bool = True) -> Solution:
+    '''CPLEX ILP Solver v2'''
+
+    return ilp_solver_v2(ilp, plp.CPLEX_CMD(), 'CPLEX', save_sol)
 
 def main() -> None:
     ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
-    ilp_solver_pulp(ilp)
-    # ilp_solver_gurobi(ilp)
-    # ilp_solver_cplex(ilp)
+    pulp_v1(ilp)
+    # gurobi_v1(ilp)
+    # cplex_v1(ilp)
 
 
 if __name__ == '__main__':

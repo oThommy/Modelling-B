@@ -21,6 +21,9 @@ from solution import Solution
 from time import sleep, time
 import pickle
 import dill
+from custom_typing import version, Version, IlpSolverData
+from enum import Flag, IntFlag, auto
+
 
 # print(Config().ROOT_DIR_PATH)
 # print(Config().OUT_DIR_PATH)
@@ -150,3 +153,23 @@ import dill
 #     avg_error_ser[index] = row.mean()
 # print(avg_error_ser)
 # print(avg_error_ser.describe())
+
+class FLAGS(Flag):
+    LOG = auto()
+    VISUALISE = auto()
+    SAVE = auto()
+
+which: FLAG = FLAG.LOG | FLAG.SAVE
+
+if (which & FLAG.LOG):
+    print('log')
+
+if (which & FLAG.VISUALISE):
+    print('visualise')
+
+if (which & FLAG.SAVE):
+    print('save')
+
+print()
+print()
+print(type(FLAG.LOG))
