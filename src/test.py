@@ -1,3 +1,5 @@
+from pyvis.network import Network
+import networkx as nx
 import sys
 import pandas as pd
 import numpy as np
@@ -10,10 +12,10 @@ import webbrowser
 from dataclasses import dataclass
 import os
 import __main__
-
 import jsonpickle
 from config import Config
-# from config import Config
+from graph_visualiser import visualise_graph
+from config import Config
 from integer_linear_problem import Ilp
 import utils
 from datetime import datetime
@@ -154,22 +156,3 @@ from enum import Flag, IntFlag, auto
 # print(avg_error_ser)
 # print(avg_error_ser.describe())
 
-class FLAGS(Flag):
-    LOG = auto()
-    VISUALISE = auto()
-    SAVE = auto()
-
-which: FLAG = FLAG.LOG | FLAG.SAVE
-
-if (which & FLAG.LOG):
-    print('log')
-
-if (which & FLAG.VISUALISE):
-    print('visualise')
-
-if (which & FLAG.SAVE):
-    print('save')
-
-print()
-print()
-print(type(FLAG.LOG))

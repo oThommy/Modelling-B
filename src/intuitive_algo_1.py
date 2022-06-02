@@ -1,5 +1,5 @@
 from integer_linear_problem import Ilp
-from solution import Solution
+from solution import Solution, Flags
 from config import Config
 from tqdm import tqdm
 import algo_funcs
@@ -12,7 +12,7 @@ def powerset(s: set) -> set:
     for bit_selection in range(1, 1 << len(s)): # start with 1 to prevent empty set
         yield {el for el, bitmask in zip(s, bitmasks) if bit_selection & bitmask}
 
-def intuitive_algo_1(ilp: Ilp, save_sol: bool = True) -> Solution:
+def intuitive_algo_1(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''Intuitive algorithm 1'''
 
     timer = utils.Timer()
@@ -49,11 +49,7 @@ def intuitive_algo_1(ilp: Ilp, save_sol: bool = True) -> Solution:
         algo_file=__file__,
         timer=timer,
     )
-    solution.print()
-
-    if save_sol:
-        solution.visualise()
-        solution.save()
+    solution.run(flags)
 
     return solution
 

@@ -1,14 +1,11 @@
 from custom_typing import IlpSolverData, version, Version
 from integer_linear_problem import Ilp
-from solution import Solution
+from solution import Solution, Flags
 from typing import Optional
 from config import Config
 import pulp as plp
 import utils
 
-
-# TODO: add FLAGS
-# TODO: refactor all to e.g. ilp_solver.gurobi_v1
 
 @version('1.0')
 def ilp_solver_v1(
@@ -16,7 +13,7 @@ def ilp_solver_v1(
     ilp: Ilp, 
     solver: Optional[plp.LpSolver_CMD] = None,
     ilp_solver_type: Optional[str] = None,
-    save_sol: bool = True,
+    flags: Flags = Flags.DEFAULT,
 ) -> Solution:
 
     '''General ILP Solver v1'''
@@ -46,8 +43,8 @@ def ilp_solver_v1(
     # add constraints
     ParDe += plp.lpSum([H[i] for i in ilp.N]) >= 1
 
-    for i in ilp.N:
-        ParDe += E[i][i] == H[i]
+    # for i in ilp.N:
+    #     ParDe += E[i][i] == H[i]
 
     for i in ilp.N:
         for j in ilp.N:
@@ -106,55 +103,107 @@ def ilp_solver_v1(
     timer.stop()
 
     solution = Solution(z, hubs, non_hubs, E, ilp, __file__, timer, ilp_solver_data)
-    solution.print()
-
-    if save_sol:
-        solution.visualise()
-        solution.save()
+    solution.run(flags)
 
     return solution
 
 @version('2.0')
 def ilp_solver_v2(
+    __version__: Version,
     ilp: Ilp, 
     solver: Optional[plp.LpSolver_CMD] = None,
     ilp_solver_type: Optional[str] = None,
-    save_sol: bool = True,
+    flags: Flags = Flags.DEFAULT,
 ) -> Solution:
 
     '''General ILP Solver v2'''
 
-    ...
+    timer = utils.Timer()
+    timer.start()
 
-def pulp_v1(ilp: Ilp, save_sol: bool = True) -> Solution:
+    # create parcel delivery model object
+    ParDe: plp.LpProblem = plp.LpProblem('Parcel Delivery', sense=plp.LpMinimize)
+
+    # create input variables
+    a = plp.LpVariable.dicts('a', (ilp.N, ilp.N), cat=plp.LpBinary)
+    p = plp.LpVariable.dicts('p', (ilp.N, ilp.N, ilp.N, ilp.N), cat=plp.LpBinary)
+    
+    # add objective z function
+    ParDe += plp.lpSum(ilp.f[i] * a[i][i] for i in ilp.N) + \
+    plp.lpSum(p[i][j][k][l] * ilp.w[i][j] * (ilp.collection * ilp.c[i][k] + ilp.transfer * ilp.c[k][l] + ilp.distribution * ilp.c[l][j]) \
+        for i in ilp.N for j in ilp.N for k in ilp.N for l in ilp.N)
+
+    # add constraints
+    ParDe += plp.lpSum([a[i][i] for i in ilp.N]) >= 1
+
+    for i in ilp.N:
+        for j in ilp.N:
+            for k in ilp.N:
+                for l in ilp.N:
+                    ParDe += p[i][j][k][l] <= a[i][k]
+                    ParDe += p[i][j][k][l] <= a[j][l]
+                    ParDe += p[i][j][k][l] >= a[i][k] + a[j][l] - 1
+
+    for i in ilp.N:
+        ParDe += plp.lpSum(a[i][j] for j in ilp.N) == 1
+
+    for i in ilp.N:
+        for j in ilp.N:
+            ParDe += a[i][j] <= a[j][j]
+
+    # solve problem
+    if solver is None:
+        ParDe.solve()
+    else:
+        ParDe.solve(solver)
+
+    E = {i: {j: int(plp.value(a[i][j])) for j in ilp.N} for i in ilp.N}
+    H = {i: int(plp.value(a[i][i])) for i in ilp.N}
+    z = int(plp.value(ParDe.objective))
+    hubs = {hub for hub, is_hub in H.items() if is_hub}
+    non_hubs = ilp.N - hubs
+    ilp_solver_data = {
+        'type': ilp_solver_type or 'UNKNOWN',
+        'status': plp.LpStatus[ParDe.status],
+        'version': __version__,
+    }
+
+    timer.stop()
+
+    solution = Solution(z, hubs, non_hubs, E, ilp, __file__, timer, ilp_solver_data)
+    solution.run(flags)
+
+    return solution
+
+def pulp_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''PuLP ILP Solver v1'''
 
-    return ilp_solver_v1(ilp, None, 'PuLP', save_sol)
+    return ilp_solver_v1(ilp, None, 'PuLP', flags)
 
-def gurobi_v1(ilp: Ilp, save_sol: bool = True) -> Solution:
+def gurobi_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''Gurobi ILP Solver v1'''
     
-    return ilp_solver_v1(ilp, plp.GUROBI_CMD(), 'Gurobi', save_sol)
+    return ilp_solver_v1(ilp, plp.GUROBI_CMD(), 'Gurobi', flags)
 
-def cplex_v1(ilp: Ilp, save_sol: bool = True) -> Solution:
+def cplex_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''CPLEX ILP Solver v1'''
 
-    return ilp_solver_v1(ilp, plp.CPLEX_CMD(), 'CPLEX', save_sol)
+    return ilp_solver_v1(ilp, plp.CPLEX_CMD(), 'CPLEX', flags)
 
-def pulp_v2(ilp: Ilp, save_sol: bool = True) -> Solution:
+def pulp_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''PuLP ILP Solver v2'''
 
-    return ilp_solver_v2(ilp, None, 'PuLP', save_sol)
+    return ilp_solver_v2(ilp, None, 'PuLP', flags)
 
-def gurobi_v2(ilp: Ilp, save_sol: bool = True) -> Solution:
+def gurobi_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''Gurobi ILP Solver v2'''
     
-    return ilp_solver_v2(ilp, plp.GUROBI_CMD(), 'Gurobi', save_sol)
+    return ilp_solver_v2(ilp, plp.GUROBI_CMD(), 'Gurobi', flags)
 
-def cplex_v2(ilp: Ilp, save_sol: bool = True) -> Solution:
+def cplex_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''CPLEX ILP Solver v2'''
 
-    return ilp_solver_v2(ilp, plp.CPLEX_CMD(), 'CPLEX', save_sol)
+    return ilp_solver_v2(ilp, plp.CPLEX_CMD(), 'CPLEX', flags)
 
 def main() -> None:
     ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)

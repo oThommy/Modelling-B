@@ -5,8 +5,9 @@ import numpy as np
 import math
 import scipy.stats as stats
 import matplotlib.pyplot as plt
-from ilp_solver import ilp_solver_gurobi
+import ilp_solver
 from intuitive_algo_2 import intuitive_algo_2
+from solution import Flags
 
 
 def gen_ilp(n, w_mu, w_sigma, c_mu, c_sigma, f_mu, f_sigma, collection, transfer, distribution):
@@ -27,6 +28,7 @@ def gen_ilp(n, w_mu, w_sigma, c_mu, c_sigma, f_mu, f_sigma, collection, transfer
 
     # ensure all values are > 0
     # FIXME: this throws the mean and std even more off...
+    # FIXME: make costs symmetrical
     while any(c_arr <= 0):
         c_arr[c_arr <= 0] = np.random.normal(loc=c_mu, scale=c_sigma, size=sum(c_arr <= 0)).astype(int)
 
@@ -102,8 +104,8 @@ def rank_algos(min_dataset_n = 10, max_dataset_n = 15, samples = 20):
     for n in range(min_dataset_n, max_dataset_n + 1):
         for i in range(samples):
             ilp = gen_ilp(n, w_mu, w_sigma, c_mu, c_sigma, f_mu, f_sigma, ilp_small.collection, ilp_small.transfer, ilp_small.distribution)
-            sol_gurobi = ilp_solver_gurobi(ilp, False)
-            sol_heuristic_2 = intuitive_algo_2(ilp, False)
+            sol_gurobi = ilp_solver.gurobi_v1(ilp, Flags.NONE)
+            sol_heuristic_2 = intuitive_algo_2(ilp, Flags.NONE)
             error_df.loc[n][i] = (sol_gurobi.z - sol_heuristic_2.z) / sol_heuristic_2.z * 100
 
     print(error_df)

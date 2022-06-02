@@ -1,12 +1,12 @@
 from integer_linear_problem import Ilp
-from solution import Solution
+from solution import Solution, Flags
 from config import Config
 from tqdm import tqdm
 import algo_funcs
 import utils
 
 
-def intuitive_algo_2(ilp: Ilp, save_sol: bool = True) -> Solution:
+def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
     '''intuitive algorithm 2'''
 
     timer = utils.Timer()
@@ -46,11 +46,7 @@ def intuitive_algo_2(ilp: Ilp, save_sol: bool = True) -> Solution:
     timer.stop()
 
     solution = Solution(z_min, min_hubs, non_hubs, E, ilp, __file__, timer)
-    solution.print()
-
-    if save_sol:
-        solution.visualise()
-        solution.save()
+    solution.run(flags)
 
     return solution
 

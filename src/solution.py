@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from integer_linear_problem import Ilp
 from datetime import datetime
 from typing import Optional
+from enum import Flag, auto
 from config import Config
 from pathlib import Path
 import pandas as pd
@@ -11,6 +12,13 @@ import __main__
 import utils
 import dill
 
+
+class Flags(Flag):
+    LOG = auto()
+    VISUALISE = auto()
+    SAVE = auto()
+    DEFAULT = LOG | VISUALISE | SAVE
+    NONE = auto()
 
 class AlreadySavedError(Exception):
      '''Raised when a Solution instance has already been saved'''
@@ -130,6 +138,17 @@ class Solution:
         print(E_df)
 
         print(self)
+
+    def run(self, flags: Flags) -> None:
+        if ~(flags & Flags.NONE):
+            if flags & Flags.LOG:
+                self.print()
+
+            if flags & Flags.VISUALISE:
+                self.visualise()
+
+            if flags & Flags.SAVE:
+                self.save()
 
     def to_dict(self) -> dict:
         d = {
