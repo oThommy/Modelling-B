@@ -44,8 +44,8 @@ def ilp_solver_v1(
     # add constraints
     ParDe += plp.lpSum([H[i] for i in ilp.N]) >= 1
 
-    # for i in ilp.N:
-    #     ParDe += E[i][i] == H[i]
+    for i in ilp.N:
+        ParDe += E[i][i] == H[i]
 
     for i in ilp.N:
         for j in ilp.N:
