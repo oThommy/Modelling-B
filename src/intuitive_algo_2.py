@@ -1,12 +1,13 @@
 from integer_linear_problem import Ilp
 from solution import Solution, Flags
+from typing import Optional
 from config import Config
 from tqdm import tqdm
 import algo_funcs
 import utils
 
 
-def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
+def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
     '''intuitive algorithm 2'''
 
     timer = utils.Timer()
@@ -45,7 +46,7 @@ def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT) -> Solution:
 
     timer.stop()
 
-    solution = Solution(z_min, min_hubs, non_hubs, E, ilp, __file__, timer)
+    solution = Solution(z_min, min_hubs, non_hubs, E, ilp, __file__, timer, annotation=annotation)
     solution.run(flags)
 
     return solution

@@ -1,0 +1,80 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 100%;
+            background-color: #222222;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"font": {"color": "white"}, "id": 1, "label": 1, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 3, "label": 3, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 4, "label": 4, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 5, "label": 5, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 6, "label": 6, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 8, "label": 8, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 9, "label": 9, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 10, "label": 10, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 11, "label": 11, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 12, "label": 12, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 13, "label": 13, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 15, "label": 15, "shape": "dot", "size": 20.0}, {"font": {"color": "white"}, "id": 2, "label": 2, "shape": "dot", "size": 27.77777777777778}, {"font": {"color": "white"}, "id": 14, "label": 14, "shape": "dot", "size": 35.55555555555556}, {"font": {"color": "white"}, "id": 7, "label": 7, "shape": "dot", "size": 55.0}]);
+        edges = new vis.DataSet([{"from": 2, "to": 14, "width": 21.91428571428571}, {"from": 2, "to": 7, "width": 14.714285714285714}, {"from": 14, "to": 7, "width": 13.685714285714285}, {"from": 1, "to": 2, "width": 11.114285714285714}, {"from": 3, "to": 7, "width": 10.085714285714285}, {"from": 4, "to": 7, "width": 16.257142857142856}, {"from": 5, "to": 7, "width": 12.657142857142857}, {"from": 6, "to": 7, "width": 8.028571428571428}, {"from": 8, "to": 7, "width": 10.085714285714285}, {"from": 9, "to": 14, "width": 11.114285714285714}, {"from": 10, "to": 7, "width": 8.542857142857143}, {"from": 11, "to": 7, "width": 9.057142857142857}, {"from": 12, "to": 7, "width": 12.142857142857142}, {"from": 13, "to": 14, "width": 9.057142857142857}, {"from": 15, "to": 14, "width": 7.0}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {"nodes": {"borderWidthSelected": 3, "color": {"border": "rgba(43,124,233,1)", "background": "rgba(151,194,252,1)", "highlight": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}, "hover": {"border": "rgba(43,124,233,1)", "background": "rgba(210,229,255,1)"}}, "scaling": {"min": 20, "max": 55}, "font": {"size": 20}}, "edges": {"color": {"inherit": false, "color": "rgba(43,124,233,1)", "highlight": "rgba(114,166,229,1)", "hover": "rgba(114,166,229,1)"}, "hoverWidth": 1.5, "smooth": {"type": "discrete", "roundness": 0.6}, "scaling": {"min": 7, "max": 25}}, "physics": {"hierarchicalRepulsion": {"centralGravity": 0, "springLength": 150, "springConstant": 0.01, "damping": 0.09, "nodeDistance": 300}, "minVelocity": 0.75, "solver": "hierarchicalRepulsion"}};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

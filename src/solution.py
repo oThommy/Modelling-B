@@ -41,6 +41,7 @@ class Solution:
     algo_file: str
     timer: Optional[utils.Timer] = None
     ilp_solver_data: Optional[IlpSolverData] = None
+    annotation: Optional[str] = None
     config_dict: dict = utils.default_fact_field(Config().to_dict(), init=False)
     __algo_basename: str = field(init=False)
     __date: datetime = field(init=False, default=datetime.now())
@@ -137,6 +138,9 @@ class Solution:
         print(f'E = ')
         print(E_df)
 
+        if self.annotation is not None:
+            print(f'Annotation: {self.annotation}')
+
         print(self)
 
     def run(self, flags: Flags) -> None:
@@ -166,6 +170,9 @@ class Solution:
             'ilp': self.ilp,
             'config_dict': self.config_dict,
         }
+
+        if self.annotation is not None:
+            d['annotation'] = self.annotation
 
         if self.timer is not None:
             d['timer'] = self.timer

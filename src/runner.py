@@ -7,18 +7,9 @@ from config import Config
 
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
+    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
 
-    # ilp_solver.pulp_v1(ilp)
-    # ilp_solver.gurobi_v1(ilp, Flags.LOG)
-    # ilp_solver.cplex_v1(ilp)
-
-    # intuitive_algo_1(ilp)
-
-    # intuitive_algo_2(ilp)
-
-    # ilp_solver.gurobi_v2(ilp, Flags.LOG)
-    ilp_solver.gurobi_v1(ilp, Flags.LOG)
+    ilp_solver.gurobi_v1(ilp, annotation='testing with E[i][i] == H[i] constraint removed')
 
 
 if __name__ == '__main__':
