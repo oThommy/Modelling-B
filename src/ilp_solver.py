@@ -3,6 +3,7 @@ from integer_linear_problem import Ilp
 from solution import Solution, Flags
 from typing import Optional
 from config import Config
+from pathlib import Path
 import pulp as plp
 import utils
 
@@ -14,6 +15,7 @@ def ilp_solver_v1(
     solver: Optional[plp.LpSolver_CMD] = None,
     ilp_solver_type: Optional[str] = None,
     flags: Flags = Flags.DEFAULT,
+    algo_dir_path: Optional[Path] = None,
     annotation: Optional[str] = None,
 ) -> Solution:
 
@@ -103,7 +105,10 @@ def ilp_solver_v1(
 
     timer.stop()
 
-    solution = Solution(z, hubs, non_hubs, E, ilp, __file__, timer, ilp_solver_data, annotation=annotation)
+    if algo_dir_path is None:
+        solution = Solution(z, hubs, non_hubs, E, ilp, timer, ilp_solver_data, algo_file=__file__, annotation=annotation)
+    else:
+        solution = Solution(z, hubs, non_hubs, E, ilp, timer, ilp_solver_data, algo_dir_path=algo_dir_path, annotation=annotation)
     solution.run(flags)
 
     return solution
@@ -115,6 +120,7 @@ def ilp_solver_v2(
     solver: Optional[plp.LpSolver_CMD] = None,
     ilp_solver_type: Optional[str] = None,
     flags: Flags = Flags.DEFAULT,
+    algo_dir_path: Optional[Path] = None,
     annotation: Optional[str] = None,
 ) -> Solution:
 
@@ -172,7 +178,10 @@ def ilp_solver_v2(
 
     timer.stop()
 
-    solution = Solution(z, hubs, non_hubs, E, ilp, __file__, timer, ilp_solver_data, annotation=annotation)
+    if algo_dir_path is None:
+        solution = Solution(z, hubs, non_hubs, E, ilp, timer, ilp_solver_data, algo_file=__file__, annotation=annotation)
+    else:
+        solution = Solution(z, hubs, non_hubs, E, ilp, timer, ilp_solver_data, algo_dir_path=algo_dir_path, annotation=annotation)
     solution.run(flags)
 
     return solution

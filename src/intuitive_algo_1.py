@@ -1,7 +1,9 @@
+from re import A
 from integer_linear_problem import Ilp
 from solution import Solution, Flags
 from typing import Optional
 from config import Config
+from pathlib import Path
 from tqdm import tqdm
 import algo_funcs
 import utils
@@ -13,7 +15,7 @@ def powerset(s: set) -> set:
     for bit_selection in range(1, 1 << len(s)): # start with 1 to prevent empty set
         yield {el for el, bitmask in zip(s, bitmasks) if bit_selection & bitmask}
 
-def intuitive_algo_1(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def intuitive_algo_1(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''Intuitive algorithm 1'''
 
     timer = utils.Timer()
@@ -41,16 +43,28 @@ def intuitive_algo_1(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optiona
 
     timer.stop()
 
-    solution = Solution(
-        z=z_min,
-        hubs=hubs_min,
-        non_hubs=non_hubs_min,
-        E=E_min,
-        ilp=ilp,
-        algo_file=__file__,
-        timer=timer,
-        annotation=annotation,
-    )
+    if algo_dir_path is None:
+        solution = Solution(
+            z=z_min,
+            hubs=hubs_min,
+            non_hubs=non_hubs_min,
+            E=E_min,
+            ilp=ilp,
+            algo_file=__file__,
+            timer=timer,
+            annotation=annotation,
+        )
+    else:
+        solution = Solution(
+            z=z_min,
+            hubs=hubs_min,
+            non_hubs=non_hubs_min,
+            E=E_min,
+            ilp=ilp,
+            algo_dir_path=algo_dir_path,
+            timer=timer,
+            annotation=annotation,
+        )
     solution.run(flags)
 
     return solution

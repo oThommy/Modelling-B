@@ -52,7 +52,6 @@ class Config(Singleton):
 
     # OTHER
     TQDM_NCOLS: int = 100
-    PICKLE_PROTOCOL: int = 5
 
     # GRAPH VISUALISER
     NETWORK_WIDTH: str = '100%'
@@ -137,9 +136,9 @@ class Config(Singleton):
             'DATA_VERY_SMALL_PATH': self.DATA_VERY_SMALL_PATH,
             'DATA_SMALL_PATH': self.DATA_SMALL_PATH,
             'DATA_LARGE_PATH': self.DATA_LARGE_PATH,
+            'DATA_MEDIUM_HUGE_PATH': self.DATA_MEDIUM_HUGE_PATH,
             'DATA_HUGE_PATH': self.DATA_HUGE_PATH,
             'TQDM_NCOLS': self.TQDM_NCOLS,
-            'PICKLE_PROTOCOL': self.PICKLE_PROTOCOL,
             'MIN_NODE_SIZE': self.MIN_NODE_SIZE,
             'MAX_NODE_SIZE': self.MAX_NODE_SIZE,
             'MIN_EDGE_WIDTH': self.MIN_EDGE_WIDTH,

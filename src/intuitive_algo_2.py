@@ -1,3 +1,4 @@
+from pathlib import Path
 from integer_linear_problem import Ilp
 from solution import Solution, Flags
 from typing import Optional
@@ -7,7 +8,7 @@ import algo_funcs
 import utils
 
 
-def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''intuitive algorithm 2'''
 
     timer = utils.Timer()
@@ -46,7 +47,10 @@ def intuitive_algo_2(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optiona
 
     timer.stop()
 
-    solution = Solution(z_min, min_hubs, non_hubs, E, ilp, __file__, timer, annotation=annotation)
+    if algo_dir_path is None:
+        solution = Solution(z_min, min_hubs, non_hubs, E, ilp, timer, algo_file=__file__, annotation=annotation)
+    else:
+        solution = Solution(z_min, min_hubs, non_hubs, E, ilp, timer, algo_dir_path=algo_dir_path, annotation=annotation)
     solution.run(flags)
 
     return solution

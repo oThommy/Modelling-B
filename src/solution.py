@@ -8,7 +8,6 @@ from enum import Flag, auto
 from config import Config
 from pathlib import Path
 import pandas as pd
-import __main__
 import utils
 import dill
 
@@ -38,19 +37,20 @@ class Solution:
     non_hubs: set[NodeId]
     E: dict[NodeId, dict[NodeId, bool]]
     ilp: Ilp
-    algo_file: str
     timer: Optional[utils.Timer] = None
     ilp_solver_data: Optional[IlpSolverData] = None
     annotation: Optional[str] = None
+    algo_file: Optional[str] = None
+    algo_dir_path: Optional[Path] = None
     config_dict: dict = utils.default_fact_field(Config().to_dict(), init=False)
-    __algo_basename: str = field(init=False)
+    __rel_algo_dir_path: Path = field(init=False, default=None)
     __date: datetime = field(init=False, default=datetime.now())
     __id: int = field(init=False)
     __is_saved: bool = field(init=False, default=False)
 
     @property
     def __algo_dir_path(self) -> Path:
-        return Config().OUT_DIR_PATH / self.__algo_basename
+        return Config().OUT_DIR_PATH / self.__rel_algo_dir_path
 
     @property
     def __inputfile_basename(self) -> Path:
@@ -66,7 +66,10 @@ class Solution:
         return self.__algo_dir_path / save_dir_name
 
     def __post_init__(self) -> None:
-        self.__algo_basename = Path(self.algo_file).stem
+        if self.algo_file is not None:
+            self.__rel_algo_dir_path = Path(self.algo_file).stem
+        elif self.algo_dir_path is not None:
+            self.__rel_algo_dir_path = Path(self.algo_dir_path).relative_to(Config().OUT_DIR_PATH)
 
         if self.__algo_dir_path.exists():
             self.__id = utils.count_dirs(self.__algo_dir_path) + 1
@@ -121,7 +124,7 @@ class Solution:
         return self.__save_dir_path
 
     def print(self) -> None:
-        print(f'===== Solution from {self.__algo_basename} =====')
+        print(f'===== Solution from {self.__rel_algo_dir_path} =====')
 
         if self.timer is not None:
             print(f'Total time: {self.timer.total_time}')
@@ -162,7 +165,6 @@ class Solution:
             'E': self.E,
             '__date': self.__date,
             '__id': self.__id,
-            '__algo_basename': self.__algo_basename,
             '__is_saved': self.__is_saved,
             '__algo_dir_path': self.__algo_dir_path,
             '__inputfile_basename': self.__inputfile_basename,
@@ -179,6 +181,10 @@ class Solution:
 
         if self.ilp_solver_data is not None:
             d['ilp_solver_data'] = self.ilp_solver_data 
+
+        if self.__rel_algo_dir_path is not None:
+            d['__rel_algo_dir_path'] = self.__rel_algo_dir_path
+
 
         return d
 

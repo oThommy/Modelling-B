@@ -7,9 +7,9 @@ from config import Config
 
 
 def main() -> None:
-    ilp = Ilp.from_excel(Config().DATA_LARGE_PATH)
+    ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)
 
-    ilp_solver.gurobi_v1(ilp, annotation='testing with E[i][i] == H[i] constraint removed')
+    intuitive_algo_2(ilp, annotation='testing Solution custom path saving', algo_dir_path=Config().OUT_DIR_PATH / r'test/yeet')
 
 
 if __name__ == '__main__':
