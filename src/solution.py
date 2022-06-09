@@ -57,7 +57,7 @@ class Solution:
         return self.ilp.inputfile_path.stem if self.ilp.inputfile_path is not None else None
 
     @property
-    def __save_dir_path(self) -> Path:
+    def save_dir_path(self) -> Path:
         if self.__inputfile_basename is None:
             save_dir_name = fr'{self.__id}-{utils.get_formatted_date("-", self.__date)}'
         else:
@@ -79,14 +79,14 @@ class Solution:
     def visualise(self) -> None:
         '''visualise graph in an interactable graphical interface'''
         
-        utils.ensure_dir_exists(self.__save_dir_path)
+        utils.ensure_dir_exists(self.save_dir_path)
 
         if self.__inputfile_basename is None:
             graph_base = fr'graph_{self.__id}_{utils.get_formatted_date("_", self.__date)}.html'
         else:
             graph_base = fr'graph_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.html'
 
-        graph_path = self.__save_dir_path / graph_base
+        graph_path = self.save_dir_path / graph_base
 
         visualise_graph(self.hubs, self.non_hubs, self.E, self.ilp, graph_path)
 
@@ -97,14 +97,14 @@ class Solution:
             raise AlreadySavedError('You cannot save a Solution instance that has already been saved.')
         self.__is_saved = True
 
-        utils.ensure_dir_exists(self.__save_dir_path)
+        utils.ensure_dir_exists(self.save_dir_path)
 
         if self.__inputfile_basename is None:
             pickle_base = fr'solution_{self.__id}_{utils.get_formatted_date("_", self.__date)}.pickle'
         else:
             pickle_base = fr'solution_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.pickle'
 
-        pickle_path = self.__save_dir_path / pickle_base
+        pickle_path = self.save_dir_path / pickle_base
 
         with open(pickle_path, 'wb') as file:
             dill.dump(self, file)
@@ -114,14 +114,14 @@ class Solution:
         else:
             solution_repr_base = fr'solution_repr_{self.__id}_{self.__inputfile_basename}_{utils.get_formatted_date("_", self.__date)}.txt'
 
-        solution_repr_path = self.__save_dir_path / solution_repr_base
+        solution_repr_path = self.save_dir_path / solution_repr_base
 
         with open(solution_repr_path, 'w') as file:
             file.write(repr(self))
 
-        print(f'The solution is successfully saved to {self.__save_dir_path}.')
+        print(f'The solution is successfully saved to {self.save_dir_path}.')
 
-        return self.__save_dir_path
+        return self.save_dir_path
 
     def print(self) -> None:
         print(f'===== Solution from {self.__rel_algo_dir_path} =====')
@@ -168,7 +168,7 @@ class Solution:
             '__is_saved': self.__is_saved,
             '__algo_dir_path': self.__algo_dir_path,
             '__inputfile_basename': self.__inputfile_basename,
-            '__save_dir_path': self.__save_dir_path,
+            'save_dir_path': self.save_dir_path,
             'ilp': self.ilp,
             'config_dict': self.config_dict,
         }

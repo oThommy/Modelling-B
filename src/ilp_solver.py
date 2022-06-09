@@ -186,35 +186,35 @@ def ilp_solver_v2(
 
     return solution
 
-def pulp_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def pulp_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''PuLP ILP Solver v1'''
 
-    return ilp_solver_v1(ilp, None, 'PuLP', flags, annotation)
+    return ilp_solver_v1(ilp, None, 'PuLP', flags, algo_dir_path, annotation)
 
-def gurobi_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def gurobi_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''Gurobi ILP Solver v1'''
     
-    return ilp_solver_v1(ilp, plp.GUROBI_CMD(), 'Gurobi', flags, annotation)
+    return ilp_solver_v1(ilp, plp.GUROBI_CMD(), 'Gurobi', flags, algo_dir_path, annotation)
 
-def cplex_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def cplex_v1(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''CPLEX ILP Solver v1'''
 
-    return ilp_solver_v1(ilp, plp.CPLEX_CMD(), 'CPLEX', flags, annotation)
+    return ilp_solver_v1(ilp, plp.CPLEX_CMD(), 'CPLEX', flags, algo_dir_path, annotation)
 
-def pulp_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def pulp_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''PuLP ILP Solver v2'''
 
-    return ilp_solver_v2(ilp, None, 'PuLP', flags, annotation)
+    return ilp_solver_v2(ilp, None, 'PuLP', flags, algo_dir_path, annotation)
 
-def gurobi_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def gurobi_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''Gurobi ILP Solver v2'''
     
-    return ilp_solver_v2(ilp, plp.GUROBI_CMD(), 'Gurobi', flags, annotation)
+    return ilp_solver_v2(ilp, plp.GUROBI_CMD(), 'Gurobi', flags, algo_dir_path, annotation)
 
-def cplex_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT, annotation: Optional[str] = None) -> Solution:
+def cplex_v2(ilp: Ilp, flags: Flags = Flags.DEFAULT, algo_dir_path: Optional[Path] = None, annotation: Optional[str] = None) -> Solution:
     '''CPLEX ILP Solver v2'''
 
-    return ilp_solver_v2(ilp, plp.CPLEX_CMD(), 'CPLEX', flags, annotation)
+    return ilp_solver_v2(ilp, plp.CPLEX_CMD(), 'CPLEX', flags, algo_dir_path, annotation)
 
 def main() -> None:
     ilp = Ilp.from_excel(Config().DATA_SMALL_PATH)

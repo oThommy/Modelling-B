@@ -12,6 +12,9 @@
 
 body {
     background-color: var(--background-color);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 nav {
@@ -71,9 +74,25 @@ nav {
     transform: rotate(-45deg);
 }
 
+main {
+    flex-grow: 1; /* extend height to the bottom of the page */
+}
+
+.main-wrapper {
+    height: 100%; /* make this and child elements extend height to the bottom of the page */
+    display: flex;
+    flex-direction: row;
+}
+
+.graph-column-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
 iframe {
     width: 800px;
-    height: 800px;
+    height: 450px;
     border: none;
     border: 5px solid red;
 }

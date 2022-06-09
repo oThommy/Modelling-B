@@ -31,6 +31,12 @@ class Config(Singleton):
         return self.OUT_DIR_PATH / r'other-graphs'
 
     @property
+    def ALGO_PERFORMANCE_RANKING_DIR_PATH(self) -> Path:
+        '''directory where all results of ranking the performance of algorithms are stored'''
+
+        return self.OUT_DIR_PATH / r'algo-performance-ranking'
+
+    @property
     def DATA_VERY_SMALL_PATH(self) -> Path:
         return self.IN_DIR_PATH / r'Data assignment parcel transport 2 very small Small.xlsx'
 
@@ -133,6 +139,7 @@ class Config(Singleton):
             'OUT_DIR_PATH': self.OUT_DIR_PATH,
             'IN_DIR_PATH': self.IN_DIR_PATH,
             'OTHER_GRAPHS_DIR_PATH': self.OTHER_GRAPHS_DIR_PATH,
+            'ALGO_PERFORMANCE_RANKING_DIR_PATH': self.ALGO_PERFORMANCE_RANKING_DIR_PATH,
             'DATA_VERY_SMALL_PATH': self.DATA_VERY_SMALL_PATH,
             'DATA_SMALL_PATH': self.DATA_SMALL_PATH,
             'DATA_LARGE_PATH': self.DATA_LARGE_PATH,
