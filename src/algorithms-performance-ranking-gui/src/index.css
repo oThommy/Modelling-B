@@ -1,18 +1,10 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@import 'global.css';
 
 :root {
-    --background-color: #1E1E1E;
-    --secondary-color: #414141;
     --arrow-icon-scale: 0.7;
 }
 
 body {
-    background-color: var(--background-color);
-    height: 100vh;
     display: flex;
     flex-direction: column;
 }

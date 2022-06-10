@@ -1,5 +1,9 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const fs = require('fs')
+
+const datasetDirs = fs.readdirSync('./../out/algo-performance-ranking', { withFileTypes: false });
+console.log(datasetDirs);
 
 const createWindow = () => {
   // Create the browser window.

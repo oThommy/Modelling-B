@@ -1,0 +1,14 @@
+@import 'global.css';
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 5rem;
+    color: hsl(0, 0%, 75%);
+    margin-bottom: 100px;
+}
