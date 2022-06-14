@@ -1,7 +1,7 @@
-const path = require('path')
-const fs = require('fs')
+const { contextBridge, ipcRenderer } = require('electron');
 
-x = fs.readdirSync(__dirname)
-console.log(x)
-
-var test = 'hoi'
+contextBridge.exposeInMainWorld('api', {
+    getDatasetDirs: () => ipcRenderer.invoke('dialog:getDatasetDirs'),
+    setDatasetDir: (choice) => ipcRenderer.invoke('dialog:setDatasetDir', choice),
+    getRankingsData: () => ipcRenderer.invoke('dialog:getRankingsData'),
+});

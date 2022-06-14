@@ -155,7 +155,7 @@ def rank_algos(min_dataset_n = 10, max_dataset_n = 15, samples = 20):
         json.dump(gui_data, file)
 
 def main() -> None:
-    rank_algos(5, 5, 2)
+    rank_algos(5, 6, 3)
 
 
 if __name__ == '__main__':

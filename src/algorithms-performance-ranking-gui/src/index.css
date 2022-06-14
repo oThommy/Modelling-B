@@ -68,23 +68,35 @@ nav {
 
 main {
     flex-grow: 1; /* extend height to the bottom of the page */
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
 }
 
 .main-wrapper {
+    min-width: 100vw;
     height: 100%; /* make this and child elements extend height to the bottom of the page */
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    padding: 15px 15px;
 }
 
 .graph-column-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 iframe {
     width: 800px;
     height: 450px;
     border: none;
-    border: 5px solid red;
+    /* border: 5px solid red; */
+}
+
+.data-column-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
